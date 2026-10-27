@@ -1,0 +1,16 @@
+# Dependencias y compilados (se generan con npm install / npm run build)
+node_modules/
+dist/
+
+# Claves y configuración privada: nunca subir a GitHub
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
