@@ -41,7 +41,7 @@ export default function ProductCard({ producto: p, onVer, onAgregar }) {
             className="prod-wa"
             title="Preguntar por WhatsApp"
             aria-label={`Preguntar por ${p.nombre} en WhatsApp`}
-            onClick={() => abrirWhatsApp(`Hola, quiero consultar por este producto:\n• ${p.nombre} — ${sol(p.precio)}\n\n¿Tienen stock?`)}
+            onClick={() => abrirWhatsApp(`Hola, quiero consultar por este producto:\n• ${p.nombre} — ${sol(p.precio)}\n\n¿Tienen stock?`, 'whatsapp-producto-tarjeta')}
           >
             <IconoWhatsApp size={21} />
           </button>

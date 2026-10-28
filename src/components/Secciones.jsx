@@ -52,7 +52,7 @@ export function Portada() {
           </p>
           <div className="portada-acc">
             <a className="boton" href="#promos"><Tag size={19} aria-hidden="true" /> Ver promos</a>
-            <a className="boton borde-osc" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+            <a className="boton borde-osc" data-evento="whatsapp-inscribirme-portada" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
               <IconoWhatsApp size={19} /> Inscribirme por WhatsApp
             </a>
           </div>
@@ -133,7 +133,7 @@ export function Promos() {
                   <span>Sale a S/ {mensual} al mes</span>
                 </p>
                 {p.hasta && <Cuenta hasta={p.hasta} ahora={ahora} />}
-                <a className={p.destacada ? 'boton' : 'boton borde'} href={linkWhatsApp(mensaje)} target="_blank" rel="noopener noreferrer">
+                <a className={p.destacada ? 'boton' : 'boton borde'} data-evento={`whatsapp-promo-${p.meses}-meses`} href={linkWhatsApp(mensaje)} target="_blank" rel="noopener noreferrer">
                   <IconoWhatsApp size={19} /> La quiero
                 </a>
               </article>
@@ -216,7 +216,7 @@ export function Sedes() {
             </ul>
 
             <div className="sedes-acc">
-              <a className="boton" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">
+              <a className="boton" data-evento="como-llegar" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">
                 <Navigation size={18} aria-hidden="true" /> Cómo llegar
               </a>
               <a className="boton wa" href={linkWhatsApp('Hola, quiero hacer una consulta sobre las sedes y el horario.')} target="_blank" rel="noopener noreferrer">
@@ -266,7 +266,7 @@ export function Equipo() {
               <div className="entrenador-txt">
                 <p className="cargo">{p.cargo}</p>
                 <h3>{p.nombre}</h3>
-                <a className="enlace-flecha" href={linkWhatsApp(`Hola, quiero entrenar con el entrenador ${p.nombre}.`)} target="_blank" rel="noopener noreferrer">
+                <a className="enlace-flecha" data-evento={`whatsapp-entrenador-${p.id}`} href={linkWhatsApp(`Hola, quiero entrenar con el entrenador ${p.nombre}.`)} target="_blank" rel="noopener noreferrer">
                   Entrenar con {p.nombre} <ArrowRight size={18} aria-hidden="true" />
                 </a>
               </div>
@@ -318,7 +318,7 @@ export function Pie() {
           <ul className="redes" aria-label="Redes sociales">
             {REDES.map((r) => (
               <li key={r.id}>
-                <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={`Stylo Fitness en ${r.nombre}`}>
+                <a href={r.url} data-evento={`red-${r.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Stylo Fitness en ${r.nombre}`}>
                   <IconoRed red={r.id} />
                 </a>
               </li>
@@ -342,7 +342,10 @@ export function Pie() {
           <p>WhatsApp {NEGOCIO.whatsappVisible}</p>
         </div>
         <p className="aviso-salud">Los suplementos no reemplazan una alimentación balanceada. Si estás en tratamiento médico, embarazada o tienes alguna condición de salud, consulta a un profesional antes de usarlos.</p>
-        <p className="aviso-demo">Propuesta de nueva web para Stylo Fitness. Versión de demostración, no oficial.</p>
+        <p className="aviso-demo">
+          Contamos visitas de forma anónima, sin cookies ni datos personales.
+          Propuesta de nueva web para Stylo Fitness. Versión de demostración, no oficial.
+        </p>
       </div>
     </footer>
   );

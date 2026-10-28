@@ -1,5 +1,6 @@
 import { FOTOS_BASE, PRODUCTOS as CRUDOS } from '../data/catalogo.js';
 import { NEGOCIO } from '../data/negocio.js';
+import { contarEvento } from './contador.js';
 
 export const PRODUCTOS = CRUDOS.map((p) => ({
   ...p,
@@ -37,7 +38,11 @@ export const limpiarTexto = (texto, max) =>
 
 export const linkWhatsApp = (texto) => `https://wa.me/${NEGOCIO.whatsapp}?text=${encodeURIComponent(texto)}`;
 
-export const abrirWhatsApp = (texto) => window.open(linkWhatsApp(texto), '_blank', 'noopener');
+// evento: nombre con el que se cuenta el clic en el contador de visitas.
+export const abrirWhatsApp = (texto, evento = 'whatsapp-consulta') => {
+  contarEvento(evento);
+  window.open(linkWhatsApp(texto), '_blank', 'noopener');
+};
 
 // En el pedido cada línea se guarda como "id" o "id|sabor".
 export const claveLinea = (id, sabor) => {

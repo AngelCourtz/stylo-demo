@@ -8,6 +8,7 @@ import IconoWhatsApp from './components/IconoWhatsApp.jsx';
 import { ComoPedir, ElGym, Equipo, Pie, Portada, Promos, Sedes } from './components/Secciones.jsx';
 import Intro from './components/Intro.jsx';
 import { useRevelar } from './lib/useRevelar.js';
+import { contarVisita, escucharClics } from './lib/contador.js';
 import { linkWhatsApp, nombreLinea } from './lib/tienda.js';
 import { usePedido } from './lib/usePedido.js';
 
@@ -29,6 +30,10 @@ export default function App() {
   const [introLista, setIntroLista] = useState(false);
   const finIntro = useCallback(() => setIntroLista(true), []);
   useRevelar();
+  useEffect(() => {
+    contarVisita();
+    return escucharClics();
+  }, []);
 
   const setFiltros = useCallback((cambios) => setFiltrosCompletos((f) => ({ ...f, ...cambios })), []);
 

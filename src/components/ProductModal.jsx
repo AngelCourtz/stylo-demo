@@ -115,7 +115,7 @@ export default function ProductModal({ id, onCerrar, onVer, onAgregar }) {
           <button
             type="button"
             className="boton wa-borde"
-            onClick={() => abrirWhatsApp(`Hola, quiero consultar por este producto:\n• ${cantidad} × ${nombreLinea(clave())} — ${sol(p.precio * cantidad)}\n\n¿Tienen stock?`)}
+            onClick={() => abrirWhatsApp(`Hola, quiero consultar por este producto:\n• ${cantidad} × ${nombreLinea(clave())} — ${sol(p.precio * cantidad)}\n\n¿Tienen stock?`, 'whatsapp-producto-ficha')}
           >
             <IconoWhatsApp /> Preguntar por WhatsApp
           </button>

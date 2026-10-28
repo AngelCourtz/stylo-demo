@@ -32,6 +32,7 @@ export default function CartDrawer({ abierto, onCerrar, pedido }) {
     abrirWhatsApp(
       `Hola, quiero hacer este pedido:\n\n${lineas.join('\n')}\n\nTotal: ${sol(pedido.total)}\nEntrega: ${lugar}\nForma de pago: ${metodoValido}` +
         `${nombreLimpio ? `\nNombre: ${nombreLimpio}` : ''}\n\n¿Tienen stock?`,
+      'whatsapp-pedido-tienda',
     );
   };
 

@@ -8,7 +8,8 @@ const CSP = {
   'script-src': ["'self'"],
   'style-src': ["'self'", 'https://fonts.googleapis.com'],
   'font-src': ['https://fonts.gstatic.com'],
-  'img-src': ["'self'", 'data:', 'https://stylofitness.com'], // fotos de productos
+  // fotos de productos y contador de visitas (GoatCounter se envía como imagen de 1 píxel)
+  'img-src': ["'self'", 'data:', 'https://stylofitness.com', 'https://*.goatcounter.com'],
   'frame-src': ['https://www.google.com', 'https://maps.google.com'], // mapa
   'connect-src': ["'self'"],
   'object-src': ["'none'"],
