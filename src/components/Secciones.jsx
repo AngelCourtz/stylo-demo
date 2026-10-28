@@ -1,143 +1,284 @@
-import { ArrowRight, Clock3, MapPin, ShoppingBag, Dumbbell } from 'lucide-react';
-import { MEMBRESIAS, NEGOCIO, OBJETIVOS, POR_CONFIRMAR, OFERTA_MINIMA } from '../data/negocio.js';
-import { PRODUCTOS, abrirWhatsApp, linkWhatsApp, sol } from '../lib/tienda.js';
+import { ArrowRight, MapPin, Navigation, Tag } from 'lucide-react';
+import { EQUIPO, FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES } from '../data/negocio.js';
+import { PRODUCTOS, linkWhatsApp } from '../lib/tienda.js';
+import { cuentaRegresiva, estadoDelGimnasio, promosVigentes, useAhora } from '../lib/tiempo.js';
+import Display from './Display.jsx';
 import IconoWhatsApp from './IconoWhatsApp.jsx';
+import IconoRed from './IconoRed.jsx';
 
 const TOTAL_PRODUCTOS = PRODUCTOS.length;
-const MAX_DESCUENTO = Math.max(...PRODUCTOS.map((p) => p.pct));
+const dos = (n) => String(n).padStart(2, '0');
 
-// Barra con discos: cada disco es un objetivo. Los más pesados van al centro, como en una barra real.
-function Barra({ activo, onElegir }) {
+// Título de sección con su columna naranja al costado, como las del local.
+function Cabeza({ id, etiqueta, titulo, bajada, children }) {
   return (
-    <div className="barra" role="group" aria-label="Elige tu objetivo">
-      <div className="lado izq">
-        <span className="tope" aria-hidden="true" />
-        {OBJETIVOS.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            className={`disco d${o.kg}`}
-            aria-pressed={activo === o.id}
-            onClick={() => onElegir(activo === o.id ? null : o.id)}
-          >
-            <small aria-hidden="true">{o.kg}</small>
-            <span>{o.nombre}</span>
-          </button>
-        ))}
+    <div className="cabeza revelar">
+      <span className="columna" aria-hidden="true" />
+      <div>
+        {etiqueta && <p className="etiqueta">{etiqueta}</p>}
+        <h2 className="titulo" id={id}>{titulo}</h2>
+        {bajada && <p className="bajada">{bajada}</p>}
       </div>
-      <div className="agarre" aria-hidden="true" />
-      <div className="lado der" aria-hidden="true">
-        <span className="tope" />
-        {OBJETIVOS.map((o) => <span key={o.id} className={`disco d${o.kg}`} />)}
-      </div>
+      {children}
     </div>
   );
 }
 
-export function Portada({ objetivo, onObjetivo }) {
+function Estado({ estado }) {
+  return (
+    <span className={estado.abierto ? 'estado abierto' : 'estado'}>
+      <i aria-hidden="true" /> {estado.texto}
+    </span>
+  );
+}
+
+/* ---------- portada ---------- */
+export function Portada() {
+  const ahora = useAhora(30000);
+  const estado = estadoDelGimnasio(new Date(ahora));
+  const { lista } = promosVigentes(ahora);
+  const desde = Math.min(...lista.map((p) => p.precio));
+  const hoy = estado.turno ?? HORARIO[0];
+
   return (
     <section className="portada" id="inicio" aria-labelledby="portada-titulo">
       <div className="envoltura portada-grid">
         <div className="portada-txt">
-          <p className="lugar"><MapPin size={16} aria-hidden="true" /> Gimnasio y suplementos · Comas, Lima</p>
-          <h1 id="portada-titulo">No hay atajos.<span>Hay Stylo.</span></h1>
-          <p className="portada-valor">
-            Entrena con nosotros y llévate tu proteína, creatina o pre entreno en el mismo lugar.
-            {` ${TOTAL_PRODUCTOS}`} suplementos con descuento y pedido directo por WhatsApp.
+          <Estado estado={estado} />
+          <h1 id="portada-titulo">Tu nuevo <span>estilo de vida</span></h1>
+          <p className="portada-donde">
+            está en la esquina de <b>Universitaria</b> con <b>Belaúnde</b>. Dos sedes en la misma cuadra de Comas,
+            abiertas desde las 6:30 de la mañana.
           </p>
           <div className="portada-acc">
-            <a className="boton" href="#gimnasio"><Dumbbell size={19} aria-hidden="true" /> Conocer el gimnasio</a>
-            <a className="boton claro" href="#tienda"><ShoppingBag size={19} aria-hidden="true" /> Comprar suplementos</a>
+            <a className="boton" href="#promos"><Tag size={19} aria-hidden="true" /> Ver promos</a>
+            <a className="boton borde-osc" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+              <IconoWhatsApp size={19} /> Inscribirme por WhatsApp
+            </a>
           </div>
         </div>
-        <div className="portada-barra">
-          <p className="barra-titulo">¿Cuál es tu objetivo?</p>
-          <p className="barra-ayuda">Toca un disco y te mostramos los suplementos que sirven para eso.</p>
-          <Barra activo={objetivo} onElegir={onObjetivo} />
+
+        <div className="portada-foto">
+          <span className="pilar" aria-hidden="true" />
+          <figure>
+            <img src="img/sede-cardio.webp" alt="Fila de caminadoras en Stylo Fitness con el logo en la pared del fondo" width="940" height="1674" fetchpriority="high" />
+          </figure>
+          <span className="pilar" aria-hidden="true" />
         </div>
       </div>
-    </section>
-  );
-}
 
-export function DosCaminos() {
-  return (
-    <section className="caminos" aria-label="Gimnasio y tienda">
-      <a className="camino entrena" href="#gimnasio">
-        <span className="camino-etq">Entrena</span>
-        <strong>El gimnasio</strong>
-        <span className="camino-txt">Membresías, horario y ubicación en Av. Universitaria 7455.</span>
-        <span className="camino-ir">Ver el gimnasio <ArrowRight size={18} aria-hidden="true" /></span>
-      </a>
-      <a className="camino recarga" href="#tienda">
-        <span className="camino-etq">Recarga</span>
-        <strong>La tienda</strong>
-        <span className="camino-txt">{TOTAL_PRODUCTOS} suplementos, todos con descuento y hasta {MAX_DESCUENTO}% en los más rebajados.</span>
-        <span className="camino-ir">Ver suplementos <ArrowRight size={18} aria-hidden="true" /></span>
-      </a>
-    </section>
-  );
-}
-
-export function Gimnasio() {
-  return (
-    <section className="gimnasio" id="gimnasio" aria-labelledby="gim-titulo">
-      <div className="envoltura gim-grid">
-        <div>
-          <h2 className="titulo" id="gim-titulo">Entrena y recarga en el mismo lugar</h2>
-          <p className="bajada">
-            Stylo Fitness es gimnasio y tienda de suplementos. Terminas tu rutina y te llevas lo que necesitas sin ir a otro
-            sitio. Si no sabes qué suplemento te conviene, escríbenos y te orientamos antes de comprar.
-          </p>
-          <dl className="datos">
-            <div><dt><MapPin size={18} aria-hidden="true" /> Dónde</dt><dd>{NEGOCIO.direccion}</dd></div>
-            <div><dt><Clock3 size={18} aria-hidden="true" /> Horario</dt><dd>{NEGOCIO.horario || <span className="pendiente">Por confirmar</span>}</dd></div>
-            <div>
-              <dt><IconoWhatsApp size={18} /> WhatsApp</dt>
-              <dd><a href={linkWhatsApp('Hola, quiero información sobre el gimnasio.')} target="_blank" rel="noopener noreferrer">{NEGOCIO.whatsappVisible}</a></dd>
-            </div>
-          </dl>
-          <a className="boton wa" href={linkWhatsApp('Hola, quiero información sobre el gimnasio.')} target="_blank" rel="noopener noreferrer">
-            <IconoWhatsApp /> Consultar por el gimnasio
-          </a>
-        </div>
-        <aside className="pendientes" aria-labelledby="pend-titulo">
-          <h3 id="pend-titulo">Falta confirmar con el gimnasio</h3>
-          <p>Esta sección se completa con datos y fotos reales antes de publicar:</p>
-          <ul>{POR_CONFIRMAR.map((t) => <li key={t}>{t}</li>)}</ul>
-        </aside>
-      </div>
-    </section>
-  );
-}
-
-export function Membresias() {
-  const consultar = (m) => abrirWhatsApp(`Hola, quiero información sobre la membresía ${m.nombre.toLowerCase()} (${m.duracion}).`);
-  return (
-    <section className="membresias" id="membresias" aria-labelledby="memb-titulo">
       <div className="envoltura">
-        <div className="cab-seccion">
-          <h2 className="titulo" id="memb-titulo">Membresías</h2>
-          <p className="bajada">Elige cuánto tiempo quieres entrenar y te enviamos precio y condiciones por WhatsApp.</p>
+        <dl className="consola" aria-label="Datos rápidos">
+          <div>
+            <dt>Hoy · {hoy.titulo.toLowerCase()}</dt>
+            <dd><Display valor={hoy.abre} /> <span className="consola-a">a</span> <Display valor={hoy.cierra} /></dd>
+          </div>
+          <div>
+            <dt>Sedes</dt>
+            <dd><Display valor={dos(SEDES.length)} /></dd>
+          </div>
+          <div>
+            <dt>Promos desde</dt>
+            <dd><span className="consola-sol">S/</span><Display valor={desde} /></dd>
+          </div>
+          <div>
+            <dt>Suplementos</dt>
+            <dd><Display valor={TOTAL_PRODUCTOS} /></dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- promos ---------- */
+function Cuenta({ hasta, ahora }) {
+  const [d, h, m, s] = cuentaRegresiva(hasta, ahora);
+  return (
+    <div className="cuenta-reg">
+      <span className="cuenta-tit">Termina en</span>
+      <Display valor={`${d}:${h}:${m}:${s}`} etiqueta={`${Number(d)} días, ${Number(h)} horas y ${Number(m)} minutos`} />
+      <span className="cuenta-uni" aria-hidden="true"><i>días</i><i>hrs</i><i>min</i><i>seg</i></span>
+    </div>
+  );
+}
+
+export function Promos() {
+  const ahora = useAhora(1000);
+  const { lista, conFecha } = promosVigentes(ahora);
+
+  return (
+    <section className="promos" id="promos" aria-labelledby="promos-titulo">
+      <div className="envoltura">
+        <Cabeza
+          id="promos-titulo"
+          etiqueta={conFecha ? 'Por tiempo limitado' : 'Promos frecuentes'}
+          titulo={conFecha ? 'Promos del mes' : 'Entrena más, paga menos'}
+          bajada="Elige tu promo, escríbenos por WhatsApp y te inscribimos."
+        />
+        <div className="consolas">
+          {lista.map((p) => {
+            const mensual = Math.round(p.precio / p.meses);
+            const mensaje = `Hola, quiero la ${p.etiqueta.toLowerCase()}: ${p.meses} meses por S/ ${p.precio}.`;
+            return (
+              <article key={p.id} className={p.destacada ? 'promo destacada revelar' : 'promo revelar'}>
+                <p className="promo-etq">{p.etiqueta}</p>
+                <h3 className="promo-meses">{p.meses === 12 ? '1 año' : `${p.meses} meses`}</h3>
+                <div className="pantalla">
+                  <span className="pantalla-sol">S/</span>
+                  <Display valor={p.precio} etiqueta={`${p.precio} soles`} className="pantalla-num" />
+                </div>
+                <p className="promo-sub">
+                  {p.antes && <span className="antes">Antes <s>S/ {p.antes}</s></span>}
+                  <span>Sale a S/ {mensual} al mes</span>
+                </p>
+                {p.hasta && <Cuenta hasta={p.hasta} ahora={ahora} />}
+                <a className={p.destacada ? 'boton' : 'boton borde'} href={linkWhatsApp(mensaje)} target="_blank" rel="noopener noreferrer">
+                  <IconoWhatsApp size={19} /> La quiero
+                </a>
+              </article>
+            );
+          })}
         </div>
-        <div className="planes">
-          {MEMBRESIAS.map((m) => (
-            <article key={m.id} className={m.destacada ? 'plan destacado' : 'plan'}>
-              <h3>{m.nombre}</h3>
-              <p className="duracion">{m.duracion}</p>
-              <p className="plan-precio">{m.precio ? sol(m.precio) : <span className="pendiente">Precio por confirmar</span>}</p>
-              <button type="button" className={m.destacada ? 'boton' : 'boton borde-claro'} onClick={() => consultar(m)}>
-                <IconoWhatsApp size={19} /> Consultar por WhatsApp
-              </button>
+        {!conFecha && <p className="nota-demo">Precios de ejemplo: se actualizan con cada promo del gimnasio.</p>}
+      </div>
+    </section>
+  );
+}
+
+/* ---------- el gym ---------- */
+export function ElGym() {
+  return (
+    <section className="elgym" id="el-gym" aria-labelledby="gym-titulo">
+      <div className="envoltura">
+        <Cabeza
+          id="gym-titulo"
+          etiqueta="El gym"
+          titulo="Columnas naranjas, fierro de verdad"
+          bajada="Cardio, máquinas, poleas y peso libre. Si es tu primera vez, pregúntale al entrenador por dónde empezar."
+        />
+        <div className="galeria">
+          {FOTOS_SEDE.map((f, i) => (
+            <figure key={f.src} className={`foto f${i + 1} revelar`}>
+              <img src={f.src} alt={f.titulo} loading="lazy" decoding="async" />
+              <figcaption><b>{f.titulo}</b><span>{f.texto}</span></figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="nota-demo">Fotos de prueba: se reemplazan por fotos reales del local antes de publicar.</p>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- sedes y horario ---------- */
+export function Sedes() {
+  const ahora = useAhora(30000);
+  const estado = estadoDelGimnasio(new Date(ahora));
+  const mapa = encodeURIComponent(NEGOCIO.mapaConsulta);
+
+  return (
+    <section className="sedes" id="sedes" aria-labelledby="sedes-titulo">
+      <div className="envoltura">
+        <Cabeza id="sedes-titulo" etiqueta="Sedes y horario" titulo="Dos sedes, una sola cuadra">
+          <Estado estado={estado} />
+        </Cabeza>
+
+        <div className="sedes-grid">
+          <div className="sedes-info">
+            <ul className="lista-sedes">
+              {SEDES.map((s, i) => (
+                <li key={s.id} className="sede revelar">
+                  <Display valor={dos(i + 1)} className="sede-num" />
+                  <div>
+                    <h3>{s.nombre}</h3>
+                    <p className="sede-dir"><MapPin size={16} aria-hidden="true" /> {s.direccion}</p>
+                    <p className="sede-det">{s.detalle}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <h3 className="sub">Horario</h3>
+            <ul className="horario">
+              {HORARIO.map((t) => (
+                <li key={t.id} className={t.dias.includes(estado.dia) ? 'hoy' : undefined}>
+                  <div>
+                    <b>{t.titulo}</b>
+                    {t.dias.includes(estado.dia) && <span className="chip-hoy">Hoy</span>}
+                    <small>{t.sedes}</small>
+                  </div>
+                  <span className="horas">
+                    <Display valor={t.abre} /> <i>a</i> <Display valor={t.cierra} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="sedes-acc">
+              <a className="boton" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">
+                <Navigation size={18} aria-hidden="true" /> Cómo llegar
+              </a>
+              <a className="boton wa" href={linkWhatsApp('Hola, quiero hacer una consulta sobre las sedes y el horario.')} target="_blank" rel="noopener noreferrer">
+                <IconoWhatsApp size={19} /> Preguntar
+              </a>
+            </div>
+          </div>
+
+          <div className="mapa revelar">
+            <iframe title={`Mapa: ${NEGOCIO.direccion}`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${mapa}&z=17&output=embed`} />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- equipo ---------- */
+// Silueta mientras no haya foto real del entrenador.
+function Silueta() {
+  return (
+    <svg className="silueta" viewBox="0 0 200 220" aria-hidden="true">
+      <circle cx="100" cy="72" r="40" />
+      <path d="M22 220c4-52 38-86 78-86s74 34 78 86z" />
+    </svg>
+  );
+}
+
+export function Equipo() {
+  return (
+    <section className="equipo" id="equipo" aria-labelledby="equipo-titulo">
+      <div className="envoltura">
+        <Cabeza
+          id="equipo-titulo"
+          etiqueta="Equipo"
+          titulo="Te reciben caras conocidas"
+          bajada="Llevan años en Stylo. Pregúntales por tu rutina, tu técnica o por dónde empezar."
+        />
+        <div className="entrenadores">
+          {EQUIPO.map((p) => (
+            <article key={p.id} className="entrenador revelar">
+              <div className="retrato">
+                {p.foto
+                  ? <img src={p.foto} alt={`${p.cargo} ${p.nombre}`} loading="lazy" />
+                  : <><Silueta /><span className="pronto">Foto próximamente</span></>}
+              </div>
+              <div className="entrenador-txt">
+                <p className="cargo">{p.cargo}</p>
+                <h3>{p.nombre}</h3>
+                <a className="enlace-flecha" href={linkWhatsApp(`Hola, quiero entrenar con el entrenador ${p.nombre}.`)} target="_blank" rel="noopener noreferrer">
+                  Entrenar con {p.nombre} <ArrowRight size={18} aria-hidden="true" />
+                </a>
+              </div>
             </article>
           ))}
         </div>
-        <p className="nota-demo">Planes de ejemplo: los nombres, precios y beneficios se definen con Stylo Fitness antes de publicar.</p>
       </div>
     </section>
   );
 }
 
+/* ---------- cómo pedir suplementos ---------- */
 export function ComoPedir() {
   const pasos = [
     ['Arma tu pedido', 'Agrega los suplementos que quieras. Si es proteína o pre entreno, escribe el sabor que prefieres.'],
@@ -147,10 +288,14 @@ export function ComoPedir() {
   return (
     <section className="como" id="como-pedir" aria-labelledby="como-titulo">
       <div className="envoltura">
-        <h2 className="titulo" id="como-titulo">Cómo pedir</h2>
+        <Cabeza id="como-titulo" etiqueta="Suplementos" titulo="Cómo pedir" />
         <ol className="pasos">
-          {pasos.map(([t, d]) => (
-            <li key={t}><h3>{t}</h3><p>{d}</p></li>
+          {pasos.map(([t, d], i) => (
+            <li key={t} className="revelar">
+              <Display valor={dos(i + 1)} className="paso-num" />
+              <h3>{t}</h3>
+              <p>{d}</p>
+            </li>
           ))}
         </ol>
         <p className="como-nota">Descuentos de {OFERTA_MINIMA}% o más marcados en cada producto. Precios tomados de stylofitness.com.</p>
@@ -159,51 +304,40 @@ export function ComoPedir() {
   );
 }
 
-export function Ubicacion() {
-  const mapa = encodeURIComponent(NEGOCIO.mapaConsulta);
-  return (
-    <section className="ubicacion" id="ubicacion" aria-labelledby="ubi-titulo">
-      <div className="envoltura ubi-grid">
-        <div>
-          <h2 className="titulo" id="ubi-titulo">Visítanos en Comas</h2>
-          <dl className="datos">
-            <div><dt>Dirección</dt><dd>{NEGOCIO.direccion}</dd></div>
-            <div><dt>Referencia</dt><dd>{NEGOCIO.referencia}</dd></div>
-            <div><dt>Horario</dt><dd>{NEGOCIO.horario || <span className="pendiente">Por confirmar</span>}</dd></div>
-            <div><dt>Pedidos y consultas</dt><dd>WhatsApp {NEGOCIO.whatsappVisible}</dd></div>
-          </dl>
-          <div className="ubi-acc">
-            <a className="boton wa" href={linkWhatsApp('Hola, quiero hacer una consulta.')} target="_blank" rel="noopener noreferrer"><IconoWhatsApp /> Escribir por WhatsApp</a>
-            <a className="boton borde" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">Cómo llegar</a>
-          </div>
-        </div>
-        <div className="mapa">
-          <iframe title={`Mapa: ${NEGOCIO.direccion}`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${mapa}&z=16&output=embed`} />
-        </div>
-      </div>
-    </section>
-  );
-}
-
+/* ---------- pie ---------- */
 export function Pie() {
   return (
     <footer className="pie">
+      <div className="pie-columnas" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} />)}</div>
       <div className="envoltura pie-grid">
         <div>
-          <a className="marca" href="#inicio">STYLO<b>FITNESS</b></a>
-          <p>Gimnasio y tienda de suplementos importados y nacionales en Comas, Lima.</p>
+          <a className="pie-logo" href="#inicio" aria-label="Stylo Fitness, volver al inicio">
+            <img src="img/logo-stylo.webp" alt="" loading="lazy" />
+          </a>
+          <p>Gimnasio y tienda de suplementos en Comas, Lima.</p>
+          <ul className="redes" aria-label="Redes sociales">
+            {REDES.map((r) => (
+              <li key={r.id}>
+                <a href={r.url} target="_blank" rel="noopener noreferrer" aria-label={`Stylo Fitness en ${r.nombre}`}>
+                  <IconoRed red={r.id} />
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
         <nav aria-label="Secciones">
           <h3>Secciones</h3>
           <ul>
-            <li><a href="#gimnasio">Gimnasio</a></li>
-            <li><a href="#membresias">Membresías</a></li>
+            <li><a href="#promos">Promos</a></li>
+            <li><a href="#el-gym">El gym</a></li>
+            <li><a href="#sedes">Sedes y horario</a></li>
             <li><a href="#tienda">Suplementos</a></li>
-            <li><a href="#como-pedir">Cómo pedir</a></li>
           </ul>
         </nav>
         <div>
-          <h3>Contacto</h3>
+          <h3>Horario</h3>
+          {HORARIO.map((t) => <p key={t.id}>{t.titulo}: {t.abre} a {t.cierra}</p>)}
+          <h3 className="pie-h3">Contacto</h3>
           <p>{NEGOCIO.direccion}</p>
           <p>WhatsApp {NEGOCIO.whatsappVisible}</p>
         </div>

@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Minus, Plus, X } from 'lucide-react';
 import { CATEGORIAS, CON_SABOR } from '../data/negocio.js';
 import { DESCRIPCIONES } from '../data/descripciones.js';
-import { PRODUCTOS, abrirWhatsApp, claveLinea, fotoDe, nombreLinea, sol } from '../lib/tienda.js';
+import { PRODUCTOS, abrirWhatsApp, claveLinea, nombreLinea, sol } from '../lib/tienda.js';
+import FotoProducto from './FotoProducto.jsx';
 import IconoWhatsApp from './IconoWhatsApp.jsx';
 import ProductCard from './ProductCard.jsx';
 
@@ -80,7 +81,7 @@ export default function ProductModal({ id, onCerrar, onVer, onAgregar }) {
       </button>
       <div className="ficha-grid">
         <div className="ficha-foto">
-          <img src={fotoDe(p)} alt={p.nombre} />
+          <FotoProducto key={p.id} producto={p} alt={p.nombre} lazy={false} />
         </div>
         <div className="ficha-info">
           <span className="prod-cat">{CATEGORIAS[p.cat]}</span>

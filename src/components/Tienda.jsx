@@ -65,6 +65,22 @@ export default function Tienda({ filtros, setFiltros, onVer, onAgregar }) {
         </div>
 
         <h2 className="titulo" id="tienda-titulo">Suplementos</h2>
+        {/* Cada disco es un objetivo: más peso, objetivo más exigente */}
+        <div className="objetivos" role="group" aria-label="Filtrar por objetivo">
+          <span className="objetivos-tit">¿Cuál es tu objetivo?</span>
+          {OBJETIVOS.map((o) => (
+            <button
+              key={o.id}
+              type="button"
+              className="objetivo"
+              aria-pressed={objetivo === o.id}
+              onClick={() => setFiltros({ objetivo: objetivo === o.id ? null : o.id, cat: 'todos', q: '' })}
+            >
+              <span className="disco-mini" aria-hidden="true">{o.kg}</span>
+              {o.nombre}
+            </button>
+          ))}
+        </div>
         <div className="tienda-cols">
           <ul className="cats" aria-label="Categorías">
             {categorias.map(([k, n, c]) => (

@@ -5,7 +5,9 @@ import Tienda from './components/Tienda.jsx';
 import ProductModal from './components/ProductModal.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import IconoWhatsApp from './components/IconoWhatsApp.jsx';
-import { ComoPedir, DosCaminos, Gimnasio, Membresias, Pie, Portada, Ubicacion } from './components/Secciones.jsx';
+import { ComoPedir, ElGym, Equipo, Pie, Portada, Promos, Sedes } from './components/Secciones.jsx';
+import Intro from './components/Intro.jsx';
+import { useRevelar } from './lib/useRevelar.js';
 import { linkWhatsApp, nombreLinea } from './lib/tienda.js';
 import { usePedido } from './lib/usePedido.js';
 
@@ -17,8 +19,6 @@ const idDelEnlace = () => {
   return m ? Number(m[1]) : null;
 };
 
-const irATienda = () => document.getElementById('tienda-titulo')?.scrollIntoView({ behavior: 'smooth' });
-
 export default function App() {
   const pedido = usePedido();
   const [filtros, setFiltrosCompletos] = useState(FILTROS_INICIALES);
@@ -26,6 +26,9 @@ export default function App() {
   const [pedidoAbierto, setPedidoAbierto] = useState(false);
   const [aviso, setAviso] = useState('');
   const temporizador = useRef(null);
+  const [introLista, setIntroLista] = useState(false);
+  const finIntro = useCallback(() => setIntroLista(true), []);
+  useRevelar();
 
   const setFiltros = useCallback((cambios) => setFiltrosCompletos((f) => ({ ...f, ...cambios })), []);
 
@@ -60,28 +63,23 @@ export default function App() {
     temporizador.current = setTimeout(() => setAviso(''), 4000);
   }, [pedido]);
 
-  const elegirObjetivo = (id) => {
-    setFiltros({ objetivo: id, cat: 'todos', q: '' });
-    if (id) irATienda();
-  };
-
   return (
     <>
       {/* Mientras el pedido está abierto, el resto de la página no recibe foco ni clics */}
       <div className="pagina" inert={pedidoAbierto}>
         <div className="franja-demo">
           <Info size={15} aria-hidden="true" />
-          <span><b>Propuesta de nueva web.</b> Productos y precios tomados de stylofitness.com; membresías y horario por confirmar.</span>
+          <span><b>Propuesta de nueva web.</b> Fotos de prueba; productos y precios tomados de stylofitness.com.</span>
         </div>
-        <Header cantidad={pedido.cantidad} onPedido={abrirPedido} />
+        <Header cantidad={pedido.cantidad} onPedido={abrirPedido} introLista={introLista} />
         <main>
-          <Portada objetivo={filtros.objetivo} onObjetivo={elegirObjetivo} />
-          <DosCaminos />
-          <Gimnasio />
-          <Membresias />
+          <Portada />
+          <Promos />
+          <ElGym />
+          <Sedes />
+          <Equipo />
           <Tienda filtros={filtros} setFiltros={setFiltros} onVer={verProducto} onAgregar={agregar} />
           <ComoPedir />
-          <Ubicacion />
         </main>
         <Pie />
         <a className="flotante" href={linkWhatsApp('Hola, quiero hacer una consulta.')} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">
@@ -101,6 +99,7 @@ export default function App() {
 
       {ficha !== null && <ProductModal id={ficha} onCerrar={cerrarFicha} onVer={verProducto} onAgregar={agregar} />}
       <CartDrawer abierto={pedidoAbierto} onCerrar={cerrarPedido} pedido={pedido} />
+      {!introLista && <Intro onFin={finIntro} />}
     </>
   );
 }

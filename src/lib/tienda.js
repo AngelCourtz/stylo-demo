@@ -10,6 +10,10 @@ export const sol = (n) => `S/ ${Number.isInteger(n) ? n : n.toFixed(2)}`;
 
 export const fotoDe = (p) => (p.foto ? FOTOS_BASE + p.foto : '');
 
+// WordPress guarda la foto original y miniaturas con sufijo "-300x300". La original se ve nítida;
+// si no existe, el componente cae a la miniatura.
+export const fotoGrande = (p) => (p.foto ? FOTOS_BASE + p.foto.replace(/-\d+x\d+(?=\.\w+$)/, '') : '');
+
 // Quita tildes y mayúsculas para que "proteina" encuentre "Proteína".
 export const normalizar = (t) => String(t).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 

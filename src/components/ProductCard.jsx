@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Package } from 'lucide-react';
 import { CATEGORIAS, OFERTA_MINIMA } from '../data/negocio.js';
-import { abrirWhatsApp, fotoDe, sol } from '../lib/tienda.js';
+import { abrirWhatsApp, sol } from '../lib/tienda.js';
 import IconoWhatsApp from './IconoWhatsApp.jsx';
+import FotoProducto from './FotoProducto.jsx';
 
 export default function ProductCard({ producto: p, onVer, onAgregar }) {
-  const [sinFoto, setSinFoto] = useState(false);
   const [agregado, setAgregado] = useState(false);
 
   const agregar = () => {
@@ -21,7 +20,7 @@ export default function ProductCard({ producto: p, onVer, onAgregar }) {
   return (
     <article className="prod">
       <a className="prod-foto" href={`#producto-${p.id}`} onClick={ver} tabIndex={-1} aria-hidden="true">
-        {sinFoto ? <Package size={56} strokeWidth={1.2} /> : <img src={fotoDe(p)} alt="" loading="lazy" width="300" height="300" onError={() => setSinFoto(true)} />}
+        <FotoProducto producto={p} />
       </a>
       {p.pct >= OFERTA_MINIMA && <span className="prod-pct">−{p.pct}%</span>}
       <div className="prod-info">
