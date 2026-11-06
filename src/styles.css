@@ -603,9 +603,10 @@ html.con-intro body { overflow: hidden; }
 .nosotros-historia.pendiente-txt b { color: var(--naranja-txt); }
 /* panel negro: el símbolo del logo (o la foto del equipo) y los números en dígitos de caminadora */
 .nosotros-panel { overflow: hidden; border-radius: var(--r-xl); background: var(--tinta); box-shadow: 0 30px 70px rgba(15,16,18,.22); }
-.nosotros-foto { aspect-ratio: 16 / 11; display: grid; place-items: center; overflow: hidden; background: var(--tinta); } /* mismo negro que el fondo de la imagen del símbolo */
+.nosotros-foto { aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; background: #fff; }
 .nosotros-foto img { width: 100%; height: 100%; object-fit: cover; }
-.nosotros-foto img.simbolo { width: 78%; height: auto; object-fit: contain; }
+/* logo completo (mismo archivo que el menú), recortado igual que en la cabecera */
+.nosotros-foto img.logo-panel { width: 84%; height: auto; aspect-ratio: 4.9; object-fit: cover; object-position: 50% 49%; }
 .nosotros-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--panel-borde); background: var(--panel); }
 .nosotros-datos > div { display: flex; flex-direction: column; gap: 8px; padding: 22px clamp(18px, 2.4vw, 30px); }
 .nosotros-datos > div:nth-child(even) { border-left: 1px solid var(--panel-borde); }

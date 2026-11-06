@@ -217,7 +217,7 @@ export function Nosotros() {
           <figure className="nosotros-foto">
             {foto
               ? <img src={foto} alt="El equipo de Stylo Fitness" loading="lazy" decoding="async" />
-              : <img src="img/simbolo-stylo.webp" alt="" width="800" height="625" loading="lazy" decoding="async" className="simbolo" />}
+              : <img src="img/logo-stylo.webp" alt="Stylo Fitness, gimnasio. Tu nuevo estilo de vida" width="900" height="450" loading="lazy" decoding="async" className="logo-panel" />}
           </figure>
           <dl className="nosotros-datos">
             {datos.map((d) => (
