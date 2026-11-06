@@ -19,17 +19,18 @@ export const REDES = [
 
 // Las dos sedes están en la misma cuadra de Av. Universitaria.
 export const SEDES = [
-  {
-    id: 'esquina',
-    nombre: 'Sede Esquina',
-    direccion: 'Av. Universitaria 7455',
-    detalle: 'En la esquina con Av. Belaúnde, frente a la avenida.',
-  },
+  // Orden confirmado: la sede 1 está a 3 o 4 casas de la esquina; la sede 2 es la de la esquina.
   {
     id: 'cuadra',
-    nombre: 'Sede 2',
+    nombre: 'Sede 1',
     direccion: 'Av. Universitaria, misma cuadra',
-    detalle: 'A cuatro casas de la Sede Esquina, hacia la izquierda.',
+    detalle: 'A 3 o 4 casas de la esquina con Av. Belaúnde.',
+  },
+  {
+    id: 'esquina',
+    nombre: 'Sede 2 · Esquina',
+    direccion: 'Av. Universitaria 7455',
+    detalle: 'En la esquina con Av. Belaúnde, frente a la avenida.',
   },
 ];
 
