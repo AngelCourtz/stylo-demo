@@ -1,8 +1,7 @@
-import { ArrowRight, MapPin, Navigation, Plus, Quote, Star, Tag } from 'lucide-react';
-import { EQUIPO, FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
+import { ArrowUpRight, MapPin, Navigation, Plus, Quote, Star, Tag } from 'lucide-react';
+import { FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
 import { PRODUCTOS, linkWhatsApp } from '../lib/tienda.js';
 import { cuentaRegresiva, estadoDelGimnasio, promosVigentes, useAhora } from '../lib/tiempo.js';
-import Display from './Display.jsx';
 import IconoWhatsApp from './IconoWhatsApp.jsx';
 import IconoRed from './IconoRed.jsx';
 
@@ -12,11 +11,10 @@ const dos = (n) => String(n).padStart(2, '0');
 // Cada foto del local tiene una versión de 640 px (mismo nombre + "-640") para celulares.
 const srcsetFoto = (src, ancho) => `${src.replace(/\.webp$/, '-640.webp')} 640w, ${src} ${ancho}w`;
 
-// Título de sección con su columna naranja al costado, como las del local.
-function Cabeza({ id, etiqueta, titulo, bajada, children }) {
+// Encabezado de sección: etiqueta pequeña con una raya naranja, título grande y bajada.
+function Cabeza({ id, etiqueta, titulo, bajada, children, centrado = false }) {
   return (
-    <div className="cabeza revelar">
-      <span className="columna" aria-hidden="true" />
+    <div className={centrado ? 'cabeza centrado revelar' : 'cabeza revelar'}>
       <div>
         {etiqueta && <p className="etiqueta">{etiqueta}</p>}
         <h2 className="titulo" id={id}>{titulo}</h2>
@@ -47,56 +45,44 @@ export function Portada() {
     <section className="portada" id="inicio" aria-labelledby="portada-titulo">
       <div className="envoltura portada-grid">
         <div className="portada-txt">
-          <Estado estado={estado} />
+          <p className="etiqueta">Gimnasio y suplementos · Comas</p>
           <h1 id="portada-titulo">Tu nuevo <span>estilo de vida</span></h1>
           <p className="portada-donde">
-            está en la esquina de <b>Universitaria</b> con <b>Belaúnde</b>. Dos sedes en la misma cuadra de Comas,
+            En la esquina de <b>Universitaria</b> con <b>Belaúnde</b>. Dos sedes en la misma cuadra,
             abiertas desde las 6:30 de la mañana.
           </p>
           <div className="portada-acc">
             <a className="boton" href="#promos"><Tag size={19} aria-hidden="true" /> Ver promos</a>
-            <a className="boton borde-osc" data-evento="whatsapp-inscribirme-portada" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+            <a className="boton borde" data-evento="whatsapp-inscribirme-portada" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
               <IconoWhatsApp size={19} /> Inscribirme por WhatsApp
             </a>
           </div>
         </div>
 
-        <div className="portada-foto">
-          <span className="pilar" aria-hidden="true" />
-          <figure>
-            {/* Recorte central de la foto de la zona de fuerza: columnas naranjas, discos y piso negro */}
-            <img
-              src="img/portada-fuerza.webp"
-              srcSet={srcsetFoto('img/portada-fuerza.webp', 1100)}
-              sizes="(max-width: 900px) 92vw, 44vw"
-              alt="Zona de fuerza con columnas naranjas, discos y máquina de poleas"
-              width="1100"
-              height="940"
-              fetchPriority="high"
-            />
-          </figure>
-          <span className="pilar" aria-hidden="true" />
-        </div>
+        <figure className="portada-foto">
+          {/* Recorte central de la foto de la zona de fuerza: columnas naranjas, discos y piso negro */}
+          <img
+            src="img/portada-fuerza.webp"
+            srcSet={srcsetFoto('img/portada-fuerza.webp', 1100)}
+            sizes="(max-width: 900px) 92vw, 48vw"
+            alt="Zona de fuerza con columnas naranjas, discos y máquina de poleas"
+            width="1100"
+            height="940"
+            fetchPriority="high"
+          />
+          <figcaption className="portada-estado">
+            <Estado estado={estado} />
+            <small>{hoy.titulo} · {hoy.abre} a {hoy.cierra}</small>
+          </figcaption>
+        </figure>
       </div>
 
       <div className="envoltura">
-        <dl className="consola" aria-label="Datos rápidos">
-          <div>
-            <dt>Hoy · {hoy.titulo.toLowerCase()}</dt>
-            <dd><Display valor={hoy.abre} /> <span className="consola-a">a</span> <Display valor={hoy.cierra} /></dd>
-          </div>
-          <div>
-            <dt>Sedes</dt>
-            <dd><Display valor={dos(SEDES.length)} /></dd>
-          </div>
-          <div>
-            <dt>Promos desde</dt>
-            <dd><span className="consola-sol">S/</span><Display valor={desde} /></dd>
-          </div>
-          <div>
-            <dt>Suplementos</dt>
-            <dd><Display valor={TOTAL_PRODUCTOS} /></dd>
-          </div>
+        <dl className="datos" aria-label="Datos rápidos">
+          <div><dt>Horario de hoy</dt><dd>{hoy.abre}<i>–</i>{hoy.cierra}</dd></div>
+          <div><dt>Sedes en Comas</dt><dd>{dos(SEDES.length)}</dd></div>
+          <div><dt>Promos desde</dt><dd><small>S/</small>{desde}</dd></div>
+          <div><dt>Suplementos</dt><dd>{TOTAL_PRODUCTOS}</dd></div>
         </dl>
       </div>
     </section>
@@ -105,12 +91,14 @@ export function Portada() {
 
 /* ---------- promos ---------- */
 function Cuenta({ hasta, ahora }) {
-  const [d, h, m, s] = cuentaRegresiva(hasta, ahora);
+  const partes = cuentaRegresiva(hasta, ahora);
+  const unidades = ['días', 'hrs', 'min', 'seg'];
   return (
-    <div className="cuenta-reg">
+    <div className="cuenta-reg" role="timer" aria-label={`Termina en ${Number(partes[0])} días, ${Number(partes[1])} horas y ${Number(partes[2])} minutos`}>
       <span className="cuenta-tit">Termina en</span>
-      <Display valor={`${d}:${h}:${m}:${s}`} etiqueta={`${Number(d)} días, ${Number(h)} horas y ${Number(m)} minutos`} />
-      <span className="cuenta-uni" aria-hidden="true"><i>días</i><i>hrs</i><i>min</i><i>seg</i></span>
+      <span className="cuenta-num" aria-hidden="true">
+        {partes.map((v, i) => <span key={unidades[i]}><b>{v}</b><i>{unidades[i]}</i></span>)}
+      </span>
     </div>
   );
 }
@@ -124,25 +112,25 @@ export function Promos() {
       <div className="envoltura">
         <Cabeza
           id="promos-titulo"
-          etiqueta={conFecha ? 'Por tiempo limitado' : 'Promos frecuentes'}
+          etiqueta={conFecha ? 'Por tiempo limitado' : 'Membresías'}
           titulo={conFecha ? 'Promos del mes' : 'Entrena más, paga menos'}
           bajada="Elige tu promo, escríbenos por WhatsApp y te inscribimos."
         />
-        <div className="consolas">
+        <div className="planes">
           {lista.map((p) => {
             const mensual = Math.round(p.precio / p.meses);
             const mensaje = `Hola, quiero la ${p.etiqueta.toLowerCase()}: ${p.meses} meses por S/ ${p.precio}.`;
             return (
-              <article key={p.id} className={p.destacada ? 'promo destacada revelar' : 'promo revelar'}>
-                <p className="promo-etq">{p.etiqueta}</p>
-                <h3 className="promo-meses">{p.meses === 12 ? '1 año' : `${p.meses} meses`}</h3>
-                <div className="pantalla">
-                  <span className="pantalla-sol">S/</span>
-                  <Display valor={p.precio} etiqueta={`${p.precio} soles`} className="pantalla-num" />
+              <article key={p.id} className={p.destacada ? 'plan destacado revelar' : 'plan revelar'}>
+                <div className="plan-cab">
+                  <p className="plan-etq">{p.etiqueta}</p>
+                  {p.destacada && <span className="plan-sello">La más pedida</span>}
                 </div>
-                <p className="promo-sub">
-                  {p.antes && <span className="antes">Antes <s>S/ {p.antes}</s></span>}
+                <h3 className="plan-meses">{p.meses === 12 ? '1 año' : `${p.meses} meses`}</h3>
+                <p className="plan-precio"><small>S/</small>{p.precio}</p>
+                <p className="plan-sub">
                   <span>Sale a S/ {mensual} al mes</span>
+                  {p.antes && <span className="antes">Antes <s>S/ {p.antes}</s></span>}
                 </p>
                 {p.hasta && <Cuenta hasta={p.hasta} ahora={ahora} />}
                 <a className={p.destacada ? 'boton' : 'boton borde'} data-evento={`whatsapp-promo-${p.meses}-meses`} href={linkWhatsApp(mensaje)} target="_blank" rel="noopener noreferrer">
@@ -210,7 +198,7 @@ export function Sedes() {
             <ul className="lista-sedes">
               {SEDES.map((s, i) => (
                 <li key={s.id} className="sede revelar">
-                  <Display valor={dos(i + 1)} className="sede-num" />
+                  <span className="sede-num" aria-hidden="true">{dos(i + 1)}</span>
                   <div>
                     <h3>{s.nombre}</h3>
                     <p className="sede-dir"><MapPin size={16} aria-hidden="true" /> {s.direccion}</p>
@@ -229,18 +217,16 @@ export function Sedes() {
                     {t.dias.includes(estado.dia) && <span className="chip-hoy">Hoy</span>}
                     <small>{t.sedes}</small>
                   </div>
-                  <span className="horas">
-                    <Display valor={t.abre} /> <i>a</i> <Display valor={t.cierra} />
-                  </span>
+                  <span className="horas">{t.abre}<i>–</i>{t.cierra}</span>
                 </li>
               ))}
             </ul>
 
             <div className="sedes-acc">
-              <a className="boton" data-evento="como-llegar" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">
+              <a className="boton negro" data-evento="como-llegar" href={`https://www.google.com/maps/search/?api=1&query=${mapa}`} target="_blank" rel="noopener noreferrer">
                 <Navigation size={18} aria-hidden="true" /> Cómo llegar
               </a>
-              <a className="boton wa" href={linkWhatsApp('Hola, quiero hacer una consulta sobre las sedes y el horario.')} target="_blank" rel="noopener noreferrer">
+              <a className="boton borde" href={linkWhatsApp('Hola, quiero hacer una consulta sobre las sedes y el horario.')} target="_blank" rel="noopener noreferrer">
                 <IconoWhatsApp size={19} /> Preguntar
               </a>
             </div>
@@ -249,50 +235,6 @@ export function Sedes() {
           <div className="mapa revelar">
             <iframe title={`Mapa: ${NEGOCIO.direccion}`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${mapa}&z=17&output=embed`} />
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- equipo ---------- */
-// Silueta mientras no haya foto real del entrenador.
-function Silueta() {
-  return (
-    <svg className="silueta" viewBox="0 0 200 220" aria-hidden="true">
-      <circle cx="100" cy="72" r="40" />
-      <path d="M22 220c4-52 38-86 78-86s74 34 78 86z" />
-    </svg>
-  );
-}
-
-export function Equipo() {
-  return (
-    <section className="equipo" id="equipo" aria-labelledby="equipo-titulo">
-      <div className="envoltura">
-        <Cabeza
-          id="equipo-titulo"
-          etiqueta="Equipo"
-          titulo="Te reciben caras conocidas"
-          bajada="Llevan años en Stylo. Pregúntales por tu rutina, tu técnica o por dónde empezar."
-        />
-        <div className="entrenadores">
-          {EQUIPO.map((p) => (
-            <article key={p.id} className="entrenador revelar">
-              <div className="retrato">
-                {p.foto
-                  ? <img src={p.foto} alt={`${p.cargo} ${p.nombre}`} loading="lazy" />
-                  : <><Silueta /><span className="pronto">Foto próximamente</span></>}
-              </div>
-              <div className="entrenador-txt">
-                <p className="cargo">{p.cargo}</p>
-                <h3>{p.nombre}</h3>
-                <a className="enlace-flecha" data-evento={`whatsapp-entrenador-${p.id}`} href={linkWhatsApp(`Hola, quiero entrenar con el entrenador ${p.nombre}.`)} target="_blank" rel="noopener noreferrer">
-                  Entrenar con {p.nombre} <ArrowRight size={18} aria-hidden="true" />
-                </a>
-              </div>
-            </article>
-          ))}
         </div>
       </div>
     </section>
@@ -308,20 +250,27 @@ function Estrellas({ n }) {
   );
 }
 
-// Sin testimonios reales cargados, la sección no inventa ninguno: es una invitación directa a calificar.
+// Franja negra a todo el ancho. Sin testimonios reales cargados, no inventa ninguno:
+// es una invitación directa a calificar en Google.
 export function Opiniones() {
   const hay = TESTIMONIOS.length > 0;
   return (
     <section className="opiniones" id="opiniones" aria-labelledby="opiniones-titulo">
       <div className="envoltura">
-        <Cabeza
-          id="opiniones-titulo"
-          etiqueta="Opiniones"
-          titulo={hay ? 'Lo que dicen nuestros clientes' : '¿Ya entrenas en Stylo?'}
-          bajada={hay
-            ? 'Opiniones reales de quienes entrenan y compran con nosotros.'
-            : 'Cuéntale a Comas cómo te va. Tu opinión en Google ayuda a que más vecinos nos encuentren.'}
-        />
+        <div className="opiniones-banda revelar">
+          <div>
+            <Estrellas n={5} />
+            <h2 className="titulo" id="opiniones-titulo">{hay ? 'Lo que dicen nuestros clientes' : '¿Ya entrenas en Stylo?'}</h2>
+            <p className="bajada">
+              {hay
+                ? 'Opiniones reales de quienes entrenan y compran con nosotros.'
+                : 'Cuéntale a Comas cómo te va. Tu opinión en Google ayuda a que más vecinos nos encuentren.'}
+            </p>
+          </div>
+          <a className="boton" data-evento="resena-google-web" href={linkResenaGoogle()} target="_blank" rel="noopener noreferrer">
+            <Star size={19} aria-hidden="true" /> Califícanos en Google
+          </a>
+        </div>
         {hay && (
           <div className="testimonios">
             {TESTIMONIOS.map((t) => (
@@ -334,13 +283,6 @@ export function Opiniones() {
             ))}
           </div>
         )}
-        <div className={hay ? 'opiniones-acc revelar' : 'opiniones-acc solo revelar'}>
-          <Estrellas n={5} />
-          <a className="boton" data-evento="resena-google-web" href={linkResenaGoogle()} target="_blank" rel="noopener noreferrer">
-            <Star size={19} aria-hidden="true" /> Califícanos en Google
-          </a>
-          <p>Toma menos de un minuto: se abre Google para que califiques con estrellas.</p>
-        </div>
       </div>
     </section>
   );
@@ -376,7 +318,11 @@ export function Preguntas() {
   return (
     <section className="preguntas" id="preguntas" aria-labelledby="preguntas-titulo">
       <div className="envoltura preguntas-grid">
-        <Cabeza id="preguntas-titulo" etiqueta="Antes de venir" titulo="Preguntas frecuentes" />
+        <Cabeza id="preguntas-titulo" etiqueta="Antes de venir" titulo="Preguntas frecuentes">
+          <a className="boton wa" href={linkWhatsApp('Hola, tengo una consulta sobre Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+            <IconoWhatsApp size={19} /> ¿Otra duda? Escríbenos
+          </a>
+        </Cabeza>
         <div className="acordeon">
           {preguntas.map(({ p, r }) => (
             <details key={p}>
@@ -384,9 +330,6 @@ export function Preguntas() {
               <p>{r}</p>
             </details>
           ))}
-          <a className="boton wa" href={linkWhatsApp('Hola, tengo una consulta sobre Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
-            <IconoWhatsApp size={19} /> ¿Otra duda? Escríbenos
-          </a>
         </div>
       </div>
     </section>
@@ -407,7 +350,7 @@ export function ComoPedir() {
         <ol className="pasos">
           {pasos.map(([t, d], i) => (
             <li key={t} className="revelar">
-              <Display valor={dos(i + 1)} className="paso-num" />
+              <span className="paso-num" aria-hidden="true">{dos(i + 1)}</span>
               <h3>{t}</h3>
               <p>{d}</p>
             </li>
@@ -423,46 +366,53 @@ export function ComoPedir() {
 export function Pie() {
   return (
     <footer className="pie">
-      <div className="pie-columnas" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map((i) => <span key={i} />)}</div>
-      <div className="envoltura pie-grid">
-        <div>
-          <a className="pie-logo" href="#inicio" aria-label="Stylo Fitness, volver al inicio">
-            <img src="img/logo-stylo.webp" alt="" loading="lazy" />
+      <div className="envoltura">
+        <div className="pie-cta">
+          <p className="pie-frase">Tu nuevo <span>estilo de vida</span> empieza hoy.</p>
+          <a className="boton" data-evento="whatsapp-pie" href={linkWhatsApp('Hola, quiero información para inscribirme en Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+            <IconoWhatsApp size={19} /> Escríbenos <ArrowUpRight size={18} aria-hidden="true" />
           </a>
-          <p>Gimnasio y tienda de suplementos en Comas, Lima.</p>
-          <ul className="redes" aria-label="Redes sociales">
-            {REDES.map((r) => (
-              <li key={r.id}>
-                <a href={r.url} data-evento={`red-${r.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Stylo Fitness en ${r.nombre}`}>
-                  <IconoRed red={r.id} />
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
-        <nav aria-label="Secciones">
-          <h3>Secciones</h3>
-          <ul>
-            <li><a href="#promos">Promos</a></li>
-            <li><a href="#el-gym">El gym</a></li>
-            <li><a href="#sedes">Sedes y horario</a></li>
-            <li><a href="#opiniones">Opiniones</a></li>
-            <li><a href="#tienda">Suplementos</a></li>
-            <li><a href="#preguntas">Preguntas frecuentes</a></li>
-          </ul>
-        </nav>
-        <div>
-          <h3>Horario</h3>
-          {HORARIO.map((t) => <p key={t.id}>{t.titulo}: {t.abre} a {t.cierra}</p>)}
-          <h3 className="pie-h3">Contacto</h3>
-          <p>{NEGOCIO.direccion}</p>
-          <p>WhatsApp {NEGOCIO.whatsappVisible}</p>
+        <div className="pie-grid">
+          <div>
+            <a className="pie-logo" href="#inicio" aria-label="Stylo Fitness, volver al inicio">
+              <img src="img/logo-stylo.webp" alt="" loading="lazy" />
+            </a>
+            <p>Gimnasio y tienda de suplementos en Comas, Lima.</p>
+            <ul className="redes" aria-label="Redes sociales">
+              {REDES.map((r) => (
+                <li key={r.id}>
+                  <a href={r.url} data-evento={`red-${r.id}`} target="_blank" rel="noopener noreferrer" aria-label={`Stylo Fitness en ${r.nombre}`}>
+                    <IconoRed red={r.id} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <nav aria-label="Secciones">
+            <h3>Secciones</h3>
+            <ul>
+              <li><a href="#promos">Promos</a></li>
+              <li><a href="#el-gym">El gym</a></li>
+              <li><a href="#sedes">Sedes y horario</a></li>
+              <li><a href="#opiniones">Opiniones</a></li>
+              <li><a href="#tienda">Suplementos</a></li>
+              <li><a href="#preguntas">Preguntas frecuentes</a></li>
+            </ul>
+          </nav>
+          <div>
+            <h3>Horario</h3>
+            {HORARIO.map((t) => <p key={t.id}>{t.titulo}: {t.abre} a {t.cierra}</p>)}
+            <h3 className="pie-h3">Contacto</h3>
+            <p>{NEGOCIO.direccion}</p>
+            <p>WhatsApp {NEGOCIO.whatsappVisible}</p>
+          </div>
+          <p className="aviso-salud">Los suplementos no reemplazan una alimentación balanceada. Si estás en tratamiento médico, embarazada o tienes alguna condición de salud, consulta a un profesional antes de usarlos.</p>
+          <p className="aviso-demo">
+            Contamos visitas de forma anónima, sin cookies ni datos personales.
+            Propuesta de nueva web para Stylo Fitness. Versión de demostración, no oficial.
+          </p>
         </div>
-        <p className="aviso-salud">Los suplementos no reemplazan una alimentación balanceada. Si estás en tratamiento médico, embarazada o tienes alguna condición de salud, consulta a un profesional antes de usarlos.</p>
-        <p className="aviso-demo">
-          Contamos visitas de forma anónima, sin cookies ni datos personales.
-          Propuesta de nueva web para Stylo Fitness. Versión de demostración, no oficial.
-        </p>
       </div>
     </footer>
   );

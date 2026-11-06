@@ -52,12 +52,6 @@ export const PROMOS_HABITUALES = [
   { id: 'cinco', etiqueta: 'Promo frecuente', meses: 5, precio: 150 },
 ];
 
-// Fotos pendientes: mientras foto sea null se muestra la inicial sobre una columna naranja.
-export const EQUIPO = [
-  { id: 'franklin', nombre: 'Franklin', cargo: 'Entrenador', foto: null },
-  { id: 'fernando', nombre: 'Fernando', cargo: 'Entrenador', foto: null },
-];
-
 // Reseñas de Google.
 // resenasGoogle: enlace que abre directo la ventana para calificar. Se saca del Perfil de Empresa
 // de Google (Pedir reseñas → copiar enlace), tiene la forma https://g.page/r/XXXX/review.

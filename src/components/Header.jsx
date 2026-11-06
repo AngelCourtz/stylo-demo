@@ -5,7 +5,6 @@ const ENLACES = [
   ['#promos', 'Promos'],
   ['#el-gym', 'El gym'],
   ['#sedes', 'Sedes y horario'],
-  ['#equipo', 'Equipo'],
   ['#opiniones', 'Opiniones'],
   ['#tienda', 'Suplementos'],
 ];

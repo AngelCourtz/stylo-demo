@@ -4,7 +4,7 @@ import Header from './components/Header.jsx';
 import Tienda from './components/Tienda.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import IconoWhatsApp from './components/IconoWhatsApp.jsx';
-import { ComoPedir, ElGym, Equipo, Opiniones, Pie, Portada, Preguntas, Promos, Sedes } from './components/Secciones.jsx';
+import { ComoPedir, ElGym, Opiniones, Pie, Portada, Preguntas, Promos, Sedes } from './components/Secciones.jsx';
 import Intro from './components/Intro.jsx';
 
 // La ficha trae las descripciones de los 126 productos (unos 110 KB): se descarga recién
@@ -94,7 +94,6 @@ export default function App() {
           <Promos />
           <ElGym />
           <Sedes />
-          <Equipo />
           <Opiniones />
           <Tienda filtros={filtros} setFiltros={setFiltros} onVer={verProducto} onAgregar={agregar} />
           <ComoPedir />
