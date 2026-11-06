@@ -32,18 +32,15 @@ export default function App() {
   const [pedidoAbierto, setPedidoAbierto] = useState(false);
   const [aviso, setAviso] = useState('');
   const temporizador = useRef(null);
-  const [introLista, setIntroLista] = useState(true);
+  // La intro (logo en el centro que vuela a la cabecera) viene dentro del HTML prerenderizado,
+  // así se ve desde el primer instante. Intro.jsx decide al activarse si se reproduce o se quita
+  // (una vez por visita; nunca con "reducir movimiento").
+  const [introLista, setIntroLista] = useState(false);
   const finIntro = useCallback(() => setIntroLista(true), []);
   useRevelar();
   useEffect(() => {
     contarVisita();
     return escucharClics();
-  }, []);
-
-  // La intro (columnas que suben y el logo que vuela) tapa la página 2.5 s: ya no sale en cada visita,
-  // solo con ?intro en la dirección, para mostrarla en la presentación al dueño.
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).has('intro')) setIntroLista(false);
   }, []);
 
   const setFiltros = useCallback((cambios) => setFiltrosCompletos((f) => ({ ...f, ...cambios })), []);

@@ -97,12 +97,23 @@ html.con-intro body { overflow: hidden; }
 .intro { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: #fff; cursor: pointer; transition: background-color .55s ease .15s; }
 .intro.vuela { background-color: rgba(255,255,255,0); }
 .intro-columnas { position: absolute; inset: 0; display: flex; justify-content: space-between; padding-inline: 7vw; overflow: hidden; pointer-events: none; }
-.intro-columnas span { width: clamp(18px, 4vw, 58px); height: 100%; background: var(--columna); transform: translateY(100%); animation: columna-pasa 1.5s cubic-bezier(.65,0,.25,1) calc(var(--i) * .06s) forwards; }
+.intro-columnas span { width: clamp(18px, 4vw, 58px); height: 100%; background: var(--columna); transform: translateY(100%); animation: columna-pasa 1.15s cubic-bezier(.65,0,.25,1) forwards; }
+/* escalonado con nth-child: los estilos en línea los bloquea la política de seguridad (CSP) */
+.intro-columnas span:nth-child(2) { animation-delay: .05s; }
+.intro-columnas span:nth-child(3) { animation-delay: .1s; }
+.intro-columnas span:nth-child(4) { animation-delay: .15s; }
+.intro-columnas span:nth-child(5) { animation-delay: .2s; }
 @keyframes columna-pasa { 45%, 60% { transform: translateY(0); } 100% { transform: translateY(-101%); } }
 .intro-centro { position: relative; }
-.intro-logo { display: block; width: min(86vw, 760px); height: auto; aspect-ratio: 4.9; object-fit: cover; object-position: 50% 49%; transform-origin: 0 0; animation: logo-entra .75s cubic-bezier(.2,.8,.2,1) .8s both; transition: transform .75s cubic-bezier(.7,0,.2,1); }
+.intro-logo { display: block; width: min(86vw, 760px); height: auto; aspect-ratio: 4.9; object-fit: cover; object-position: 50% 49%; transform-origin: 0 0; animation: logo-entra .6s cubic-bezier(.2,.8,.2,1) .45s both; transition: transform .65s cubic-bezier(.7,0,.2,1); }
 @keyframes logo-entra { from { clip-path: inset(0 100% 0 0); opacity: .4; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
 .marca.esperando img { opacity: 0; }
+/* respaldo sin JavaScript: la capa se desvanece sola y el logo de la cabecera aparece */
+.intro { animation: intro-sale .4s ease 3.2s forwards; }
+.marca.esperando img { animation: marca-aparece .3s ease 3.2s forwards; }
+@keyframes intro-sale { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+@keyframes marca-aparece { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .intro { display: none; } .marca.esperando img { opacity: 1; } }
 
 /* ---------- franja demo y cabecera ---------- */
 .franja-demo { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 8px var(--pad); background: var(--hueso); border-bottom: 1px solid var(--linea); color: var(--gris); font-size: .8rem; text-align: center; }

@@ -42,7 +42,7 @@ node scripts/inventario.mjs comparar docs/inventario-antes.json
 | Enlace de reseñas de Google y testimonios reales | `src/data/negocio.js` (`GOOGLE`, `TESTIMONIOS`) |
 | Dominio final y si Google puede indexar la web | `src/data/sitio.js` |
 
-Página del QR del local: `qr/index.html` (se publica en `…/qr/`). La intro animada se ve con `?intro` en la dirección.
+Página del QR del local: `qr/index.html` (se publica en `…/qr/`). La intro animada sale una vez por visita; para verla de nuevo, agrega `?intro` a la dirección.
 
 Lo que está en `null` se muestra como "por confirmar".
 

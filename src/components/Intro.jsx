@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const CLAVE = 'stylo-intro-vista';
 
-// Se muestra una vez por visita (o siempre con ?intro en la dirección) y nunca con "reducir movimiento".
+// Se reproduce una vez por visita (o siempre con ?intro en la dirección) y nunca con "reducir movimiento".
 const debeMostrarse = () => {
   try {
     if (new URLSearchParams(window.location.search).has('intro')) return true;
@@ -17,14 +17,15 @@ const marcarVista = () => {
   try { sessionStorage.setItem(CLAVE, '1'); } catch { /* sin almacenamiento: se verá de nuevo, no pasa nada */ }
 };
 
-// Las columnas naranjas suben como en el local, aparece el logo y vuela a su sitio en la cabecera.
+// Las columnas naranjas suben como en el local, aparece el logo en el centro y vuela a su sitio en la cabecera.
+// La capa viene en el HTML prerenderizado (sin parpadeo de la página antes de la intro). Si JavaScript no
+// llega a activarse, el CSS la desvanece solo a los pocos segundos.
 export default function Intro({ onFin }) {
-  const [mostrar] = useState(debeMostrarse);
   const [fase, setFase] = useState('entra');
   const logo = useRef(null);
 
   useEffect(() => {
-    if (!mostrar) { onFin(); return undefined; }
+    if (!debeMostrarse()) { onFin(); return undefined; }
     marcarVista();
     document.documentElement.classList.add('con-intro');
 
@@ -39,19 +40,17 @@ export default function Intro({ onFin }) {
       setFase('vuela');
     };
 
-    const t1 = setTimeout(volar, 1700);
+    const t1 = setTimeout(volar, 1250);
     const t2 = setTimeout(() => {
       document.documentElement.classList.remove('con-intro');
       onFin();
-    }, 2500);
+    }, 1950);
     return () => {
       clearTimeout(t1);
       clearTimeout(t2);
       document.documentElement.classList.remove('con-intro');
     };
-  }, [mostrar, onFin]);
-
-  if (!mostrar) return null;
+  }, [onFin]);
 
   const saltar = () => {
     document.documentElement.classList.remove('con-intro');
@@ -61,10 +60,10 @@ export default function Intro({ onFin }) {
   return (
     <div className={`intro ${fase}`} onClick={saltar} aria-hidden="true">
       <div className="intro-columnas">
-        {[0, 1, 2, 3, 4].map((i) => <span key={i} style={{ '--i': i }} />)}
+        {[0, 1, 2, 3, 4].map((i) => <span key={i} />)}
       </div>
       <div className="intro-centro">
-        <img ref={logo} className="intro-logo" src="img/logo-stylo.webp" alt="" />
+        <img ref={logo} className="intro-logo" src="img/logo-stylo.webp" alt="" width="900" height="450" fetchPriority="high" />
       </div>
     </div>
   );

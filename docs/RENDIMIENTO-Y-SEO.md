@@ -27,7 +27,7 @@ Reglas para que el HTML y el primer dibujo coincidan (si no, React muestra error
 | JavaScript propio al cargar | 147 KB | 39 KB (la ficha y sus descripciones se descargan al abrir un producto) |
 | Logo | 207 KB (1774 px) | 60 KB (900 px) |
 | Fotos del local en celular | 310–340 KB c/u | 37–105 KB (versiones `-640.webp` con `srcset`) |
-| Intro de 2.5 s en cada visita | siempre | solo con `?intro` en la dirección (para presentarla al dueño) |
+| Intro (logo al centro que vuela al menú) | 2.5 s, se dibujaba después de cargar | 2 s, una vez por visita, viene en el HTML (sin parpadeo), se salta tocando la pantalla y se quita sola si falla JavaScript |
 
 ## SEO
 - `src/data/sitio.js`: dirección pública e `indexar`. **Mientras sea demo, `indexar: false`** (meta `noindex`),
