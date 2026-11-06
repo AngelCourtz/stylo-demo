@@ -218,6 +218,9 @@ html.con-intro body { overflow: hidden; }
 @media (max-width: 760px) {
   .galeria { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; height: auto; }
   .galeria .f1 { grid-row: auto; height: 420px; }
+  /* cardio en celular: se muestra la parte de arriba de la foto (la fila de trotadoras y la pared con el
+     logo de Stylo) en vez del primer plano de una máquina. El zoom también parte desde arriba. */
+  .galeria .f1 img { object-position: 50% 0%; transform-origin: 50% 0%; }
   .galeria .foto:not(.f1) { height: 260px; }
 }
 
