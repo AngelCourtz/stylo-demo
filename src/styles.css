@@ -506,3 +506,73 @@ html.con-intro body { overflow: hidden; }
   .cajon-cab { position: sticky; top: 0; z-index: 2; }
   .cajon-lista { flex: 1 0 auto; overflow: visible; }
 }
+
+/* =====================================================================
+   Mezcla negro y blanco + números de caminadora
+   Portada, promos y El gym van en negro (fuerza de gym); sedes, tienda,
+   cómo pedir y preguntas en blanco y hueso para leer fácil. Los números
+   (precios, horarios, pasos) usan los dígitos LED de las trotadoras.
+   ===================================================================== */
+:root { --led: #FF6A1A; --panel: #0A0B0D; --panel-borde: #24262B; }
+
+/* dígitos de 7 segmentos (Display.jsx) */
+.seg { display: inline-flex; align-items: center; gap: .07em; height: 1em; color: var(--led); filter: drop-shadow(0 0 .14em rgba(255,106,26,.55)); vertical-align: middle; }
+.seg-dig { height: 1em; width: .62em; overflow: visible; }
+.seg-sep { height: 1em; width: .2em; }
+.seg .on { fill: currentColor; }
+.seg .off { fill: currentColor; opacity: .09; }
+
+/* ---------- franjas negras ---------- */
+.portada, .promos, .elgym { color: #fff; }
+.portada { background: radial-gradient(1100px 620px at 88% 0%, #1F2126 0%, var(--tinta) 62%); }
+.promos { background: #121316; border-top: 1px solid var(--linea-osc); }
+.elgym { background: var(--tinta); border-top: 1px solid var(--linea-osc); }
+:is(.portada, .promos, .elgym) .etiqueta { color: var(--gris-claro); }
+:is(.portada, .promos, .elgym) .bajada { color: var(--gris-claro); }
+:is(.portada, .promos, .elgym) .nota-demo { color: #6F737B; }
+:is(.portada, .promos, .elgym, .pie) .boton.borde { color: #fff; border-color: #464A52; }
+:is(.portada, .promos, .elgym, .pie) .boton.borde:hover { background: #fff; color: var(--tinta); border-color: #fff; }
+.portada-donde { color: #B4B8BF; }
+.portada-donde b { color: #fff; }
+.portada-foto, .foto { background: var(--grafito); }
+.portada-foto { box-shadow: 0 40px 80px rgba(0,0,0,.45); }
+
+/* datos rápidos: consola de caminadora */
+.datos { margin-top: clamp(48px, 6vw, 80px); border: 0; border-radius: 22px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--panel-borde), 0 30px 60px rgba(0,0,0,.35); }
+.datos > div, .datos > div + div { padding: 22px clamp(18px, 2.6vw, 34px); }
+.datos > div + div { border-left: 1px solid var(--panel-borde); }
+.datos dt { font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #8A8F98; }
+.datos dd { display: flex; align-items: center; gap: 10px; font-size: clamp(1.7rem, 2.8vw, 2.5rem); }
+.datos dd i { font: 600 .82rem/1 var(--txt); color: #5E636B; margin: 0; }
+.datos dd small { font: 800 .62em/1 var(--disp); color: var(--led); margin: 0; }
+@media (max-width: 900px) {
+  .datos > div:nth-child(3) { padding-left: clamp(18px, 2.6vw, 34px); border-left: 0; }
+  .datos > div:nth-child(n+3) { margin-top: 0; border-top: 1px solid var(--panel-borde); }
+}
+@media (max-width: 520px) { .datos dd { font-size: 1.45rem; gap: 7px; } .datos > div, .datos > div + div, .datos > div:nth-child(3) { padding: 18px 16px; } }
+
+/* promos: tarjetas oscuras, precio en la pantalla de la trotadora */
+.plan { background: #1A1B1F; border-color: var(--linea-osc); color: #fff; }
+.plan:hover { box-shadow: 0 30px 60px rgba(0,0,0,.4); }
+.plan-etq { color: var(--naranja); }
+.plan-meses { margin-top: 10px; font-size: clamp(2.2rem, 3.4vw, 2.8rem); font-weight: 800; }
+.plan-sub, .plan .antes { color: var(--gris-claro); }
+.plan.destacado { background: #1A1B1F; border-color: transparent; box-shadow: inset 0 0 0 2px var(--naranja), 0 30px 60px rgba(242,112,29,.16); }
+.plan.destacado:hover { box-shadow: inset 0 0 0 2px var(--naranja), 0 34px 70px rgba(242,112,29,.24); }
+.pantalla { display: flex; align-items: flex-end; gap: 12px; margin-top: 14px; padding: 22px 24px; border-radius: 16px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--panel-borde), inset 0 12px 30px rgba(0,0,0,.6); }
+.pantalla-sol { padding-bottom: .22em; font: 800 1.7rem/1 var(--disp); color: var(--led); }
+.pantalla-num { font-size: clamp(3.8rem, 6vw, 4.8rem); }
+.cuenta-reg { justify-self: start; gap: 6px; border-color: var(--linea-osc); }
+.plan.destacado .cuenta-reg { border-color: var(--linea-osc); }
+.cuenta-tit { color: #8A8F98; }
+.cuenta-reg .seg { font-size: 1.7rem; }
+.cuenta-uni { display: flex; justify-content: space-between; width: 10.6em; padding-inline: .2em; font-size: .68rem; color: #6F737B; }
+.cuenta-uni i { font-style: normal; width: 2.4em; text-align: center; }
+
+/* sedes y cómo pedir (claros): los números van en una mini pantalla negra */
+.sede-num, .horas, .paso-num { display: inline-flex; align-items: center; gap: 8px; padding: .3em .36em; border-radius: 12px; background: var(--panel); box-shadow: inset 0 0 0 1px var(--panel-borde); line-height: 1; }
+.sede-num { font-size: 2rem; }
+.horas { font-size: 1.3rem; }
+.horas i { font: 600 .78rem/1 var(--txt); color: #6F737B; margin: 0; }
+.horario li:not(.hoy) .horas { opacity: .82; }
+.paso-num { margin-bottom: 24px; font-size: 2.1rem; }

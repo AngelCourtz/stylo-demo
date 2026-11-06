@@ -2,6 +2,7 @@ import { ArrowUpRight, MapPin, Navigation, Plus, Quote, Star, Tag } from 'lucide
 import { FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
 import { PRODUCTOS, linkWhatsApp } from '../lib/tienda.js';
 import { cuentaRegresiva, estadoDelGimnasio, promosVigentes, useAhora } from '../lib/tiempo.js';
+import Display from './Display.jsx';
 import IconoWhatsApp from './IconoWhatsApp.jsx';
 import IconoRed from './IconoRed.jsx';
 
@@ -79,10 +80,10 @@ export function Portada() {
 
       <div className="envoltura">
         <dl className="datos" aria-label="Datos rápidos">
-          <div><dt>Horario de hoy</dt><dd>{hoy.abre}<i>–</i>{hoy.cierra}</dd></div>
-          <div><dt>Sedes en Comas</dt><dd>{dos(SEDES.length)}</dd></div>
-          <div><dt>Promos desde</dt><dd><small>S/</small>{desde}</dd></div>
-          <div><dt>Suplementos</dt><dd>{TOTAL_PRODUCTOS}</dd></div>
+          <div><dt>Horario de hoy</dt><dd><Display valor={hoy.abre} /><i>a</i><Display valor={hoy.cierra} /></dd></div>
+          <div><dt>Sedes en Comas</dt><dd><Display valor={dos(SEDES.length)} /></dd></div>
+          <div><dt>Promos desde</dt><dd><small>S/</small><Display valor={desde} etiqueta={`${desde} soles`} /></dd></div>
+          <div><dt>Suplementos</dt><dd><Display valor={TOTAL_PRODUCTOS} /></dd></div>
         </dl>
       </div>
     </section>
@@ -91,14 +92,12 @@ export function Portada() {
 
 /* ---------- promos ---------- */
 function Cuenta({ hasta, ahora }) {
-  const partes = cuentaRegresiva(hasta, ahora);
-  const unidades = ['días', 'hrs', 'min', 'seg'];
+  const [d, h, m, s] = cuentaRegresiva(hasta, ahora);
   return (
-    <div className="cuenta-reg" role="timer" aria-label={`Termina en ${Number(partes[0])} días, ${Number(partes[1])} horas y ${Number(partes[2])} minutos`}>
+    <div className="cuenta-reg">
       <span className="cuenta-tit">Termina en</span>
-      <span className="cuenta-num" aria-hidden="true">
-        {partes.map((v, i) => <span key={unidades[i]}><b>{v}</b><i>{unidades[i]}</i></span>)}
-      </span>
+      <Display valor={`${d}:${h}:${m}:${s}`} etiqueta={`${Number(d)} días, ${Number(h)} horas y ${Number(m)} minutos`} />
+      <span className="cuenta-uni" aria-hidden="true"><i>días</i><i>hrs</i><i>min</i><i>seg</i></span>
     </div>
   );
 }
@@ -127,7 +126,10 @@ export function Promos() {
                   {p.destacada && <span className="plan-sello">La más pedida</span>}
                 </div>
                 <h3 className="plan-meses">{p.meses === 12 ? '1 año' : `${p.meses} meses`}</h3>
-                <p className="plan-precio"><small>S/</small>{p.precio}</p>
+                <div className="pantalla">
+                  <span className="pantalla-sol">S/</span>
+                  <Display valor={p.precio} etiqueta={`${p.precio} soles`} className="pantalla-num" />
+                </div>
                 <p className="plan-sub">
                   <span>Sale a S/ {mensual} al mes</span>
                   {p.antes && <span className="antes">Antes <s>S/ {p.antes}</s></span>}
@@ -198,7 +200,7 @@ export function Sedes() {
             <ul className="lista-sedes">
               {SEDES.map((s, i) => (
                 <li key={s.id} className="sede revelar">
-                  <span className="sede-num" aria-hidden="true">{dos(i + 1)}</span>
+                  <Display valor={dos(i + 1)} className="sede-num" etiqueta={`Sede ${i + 1}`} />
                   <div>
                     <h3>{s.nombre}</h3>
                     <p className="sede-dir"><MapPin size={16} aria-hidden="true" /> {s.direccion}</p>
@@ -217,7 +219,7 @@ export function Sedes() {
                     {t.dias.includes(estado.dia) && <span className="chip-hoy">Hoy</span>}
                     <small>{t.sedes}</small>
                   </div>
-                  <span className="horas">{t.abre}<i>–</i>{t.cierra}</span>
+                  <span className="horas"><Display valor={t.abre} /> <i>a</i> <Display valor={t.cierra} /></span>
                 </li>
               ))}
             </ul>
@@ -350,7 +352,7 @@ export function ComoPedir() {
         <ol className="pasos">
           {pasos.map(([t, d], i) => (
             <li key={t} className="revelar">
-              <span className="paso-num" aria-hidden="true">{dos(i + 1)}</span>
+              <Display valor={dos(i + 1)} className="paso-num" etiqueta={`Paso ${i + 1}`} />
               <h3>{t}</h3>
               <p>{d}</p>
             </li>
