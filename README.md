@@ -21,6 +21,8 @@ Para verla en un celular de la misma red: `npm run dev -- --host` y abre la dire
 npm run build
 ```
 
+Compila y prerenderiza: el HTML sale con el contenido ya visible antes de que cargue JavaScript
+(detalles en `docs/RENDIMIENTO-Y-SEO.md`). Para ver la versión compilada: `npm run preview`.
 Sube el contenido de `dist/` a GitHub Pages, Netlify o Cloudflare Pages. Las rutas son relativas,
 así que funciona también dentro de una subcarpeta (por ejemplo `usuario.github.io/stylo-demo/`).
 
@@ -37,6 +39,10 @@ node scripts/inventario.mjs comparar docs/inventario-antes.json
 | WhatsApp, dirección, horario, membresías y precios | `src/data/negocio.js` |
 | Productos y precios | `src/data/catalogo.js` |
 | Descripciones de productos | `src/data/descripciones.js` |
+| Enlace de reseñas de Google y testimonios reales | `src/data/negocio.js` (`GOOGLE`, `TESTIMONIOS`) |
+| Dominio final y si Google puede indexar la web | `src/data/sitio.js` |
+
+Página del QR del local: `qr/index.html` (se publica en `…/qr/`). La intro animada se ve con `?intro` en la dirección.
 
 Lo que está en `null` se muestra como "por confirmar".
 

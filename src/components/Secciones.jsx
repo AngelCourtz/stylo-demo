@@ -1,5 +1,5 @@
-import { ArrowRight, MapPin, Navigation, Tag } from 'lucide-react';
-import { EQUIPO, FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES } from '../data/negocio.js';
+import { ArrowRight, MapPin, Navigation, Plus, Quote, Star, Tag } from 'lucide-react';
+import { EQUIPO, FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
 import { PRODUCTOS, linkWhatsApp } from '../lib/tienda.js';
 import { cuentaRegresiva, estadoDelGimnasio, promosVigentes, useAhora } from '../lib/tiempo.js';
 import Display from './Display.jsx';
@@ -8,6 +8,9 @@ import IconoRed from './IconoRed.jsx';
 
 const TOTAL_PRODUCTOS = PRODUCTOS.length;
 const dos = (n) => String(n).padStart(2, '0');
+
+// Cada foto del local tiene una versión de 640 px (mismo nombre + "-640") para celulares.
+const srcsetFoto = (src, ancho) => `${src.replace(/\.webp$/, '-640.webp')} 640w, ${src} ${ancho}w`;
 
 // Título de sección con su columna naranja al costado, como las del local.
 function Cabeza({ id, etiqueta, titulo, bajada, children }) {
@@ -61,7 +64,15 @@ export function Portada() {
         <div className="portada-foto">
           <span className="pilar" aria-hidden="true" />
           <figure>
-            <img src="img/sede-cardio.webp" alt="Fila de caminadoras en Stylo Fitness con el logo en la pared del fondo" width="940" height="1674" fetchpriority="high" />
+            <img
+              src="img/sede-cardio.webp"
+              srcSet={srcsetFoto('img/sede-cardio.webp', 940)}
+              sizes="(max-width: 900px) 92vw, 40vw"
+              alt="Fila de caminadoras en Stylo Fitness con el logo en la pared del fondo"
+              width="940"
+              height="1674"
+              fetchPriority="high"
+            />
           </figure>
           <span className="pilar" aria-hidden="true" />
         </div>
@@ -160,7 +171,16 @@ export function ElGym() {
         <div className="galeria">
           {FOTOS_SEDE.map((f, i) => (
             <figure key={f.src} className={`foto f${i + 1} revelar`}>
-              <img src={f.src} alt={f.titulo} loading="lazy" decoding="async" />
+              <img
+                src={f.src}
+                srcSet={srcsetFoto(f.src, f.ancho)}
+                sizes={i === 0 ? '(max-width: 760px) 92vw, 36vw' : '(max-width: 760px) 92vw, 58vw'}
+                alt={f.titulo}
+                width={f.ancho}
+                height={f.alto}
+                loading="lazy"
+                decoding="async"
+              />
               <figcaption><b>{f.titulo}</b><span>{f.texto}</span></figcaption>
             </figure>
           ))}
@@ -278,6 +298,100 @@ export function Equipo() {
   );
 }
 
+/* ---------- opiniones de clientes ---------- */
+function Estrellas({ n }) {
+  return (
+    <span className="estrellas" role="img" aria-label={`${n} de 5 estrellas`}>
+      {[1, 2, 3, 4, 5].map((i) => <Star key={i} size={18} aria-hidden="true" className={i <= n ? 'llena' : undefined} />)}
+    </span>
+  );
+}
+
+// Sin testimonios reales cargados, la sección no inventa ninguno: es una invitación directa a calificar.
+export function Opiniones() {
+  const hay = TESTIMONIOS.length > 0;
+  return (
+    <section className="opiniones" id="opiniones" aria-labelledby="opiniones-titulo">
+      <div className="envoltura">
+        <Cabeza
+          id="opiniones-titulo"
+          etiqueta="Opiniones"
+          titulo={hay ? 'Lo que dicen nuestros clientes' : '¿Ya entrenas en Stylo?'}
+          bajada={hay
+            ? 'Opiniones reales de quienes entrenan y compran con nosotros.'
+            : 'Cuéntale a Comas cómo te va. Tu opinión en Google ayuda a que más vecinos nos encuentren.'}
+        />
+        {hay && (
+          <div className="testimonios">
+            {TESTIMONIOS.map((t) => (
+              <figure key={t.id} className="testimonio revelar">
+                <Quote size={28} aria-hidden="true" className="comillas" />
+                <Estrellas n={t.estrellas} />
+                <blockquote>{t.texto}</blockquote>
+                <figcaption><b>{t.nombre}</b><span>{t.detalle}</span></figcaption>
+              </figure>
+            ))}
+          </div>
+        )}
+        <div className={hay ? 'opiniones-acc revelar' : 'opiniones-acc solo revelar'}>
+          <Estrellas n={5} />
+          <a className="boton" data-evento="resena-google-web" href={linkResenaGoogle()} target="_blank" rel="noopener noreferrer">
+            <Star size={19} aria-hidden="true" /> Califícanos en Google
+          </a>
+          <p>Toma menos de un minuto: se abre Google para que califiques con estrellas.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- preguntas frecuentes ---------- */
+// Solo respuestas que salen de los datos de negocio.js y del funcionamiento real de la web.
+// <details> abre y cierra sin JavaScript, así funcionan también en el HTML prerenderizado.
+export function Preguntas() {
+  const horario = HORARIO.map((t) => `${t.titulo}: ${t.abre} a ${t.cierra}, ${t.sedes.toLowerCase()}`).join('. ');
+  const preguntas = [
+    {
+      p: '¿Cuál es el horario del gimnasio?',
+      r: <>{horario}.</>,
+    },
+    {
+      p: '¿Dónde quedan las sedes?',
+      r: <>{SEDES.map((s) => `${s.nombre}: ${s.direccion}. ${s.detalle}`).join(' ')} {NEGOCIO.referencia}.</>,
+    },
+    {
+      p: '¿Cómo me inscribo?',
+      r: <>Elige tu promo en la sección <a href="#promos">Promos</a> y toca “La quiero”: se abre WhatsApp con el mensaje listo y te inscribimos por ahí.</>,
+    },
+    {
+      p: '¿Cómo compro suplementos?',
+      r: <>Agrega los productos a tu pedido desde la <a href="#tienda">tienda</a> y envíalo por WhatsApp. Te confirmamos stock, entrega y forma de pago antes de cobrar.</>,
+    },
+    {
+      p: '¿Se paga en la web?',
+      r: <>No. La web solo arma tu pedido; el pago se coordina por WhatsApp cuando confirmamos que hay stock.</>,
+    },
+  ];
+  return (
+    <section className="preguntas" id="preguntas" aria-labelledby="preguntas-titulo">
+      <div className="envoltura preguntas-grid">
+        <Cabeza id="preguntas-titulo" etiqueta="Antes de venir" titulo="Preguntas frecuentes" />
+        <div className="acordeon">
+          {preguntas.map(({ p, r }) => (
+            <details key={p}>
+              <summary>{p}<Plus size={20} aria-hidden="true" /></summary>
+              <p>{r}</p>
+            </details>
+          ))}
+          <a className="boton wa" href={linkWhatsApp('Hola, tengo una consulta sobre Stylo Fitness.')} target="_blank" rel="noopener noreferrer">
+            <IconoWhatsApp size={19} /> ¿Otra duda? Escríbenos
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- cómo pedir suplementos ---------- */
 export function ComoPedir() {
   const pasos = [
@@ -331,7 +445,9 @@ export function Pie() {
             <li><a href="#promos">Promos</a></li>
             <li><a href="#el-gym">El gym</a></li>
             <li><a href="#sedes">Sedes y horario</a></li>
+            <li><a href="#opiniones">Opiniones</a></li>
             <li><a href="#tienda">Suplementos</a></li>
+            <li><a href="#preguntas">Preguntas frecuentes</a></li>
           </ul>
         </nav>
         <div>

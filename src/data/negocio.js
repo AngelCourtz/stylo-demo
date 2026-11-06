@@ -58,11 +58,28 @@ export const EQUIPO = [
   { id: 'fernando', nombre: 'Fernando', cargo: 'Entrenador', foto: null },
 ];
 
+// Reseñas de Google.
+// resenasGoogle: enlace que abre directo la ventana para calificar. Se saca del Perfil de Empresa
+// de Google (Pedir reseñas → copiar enlace), tiene la forma https://g.page/r/XXXX/review.
+// Mientras sea null, el botón abre la ficha del gimnasio en Google Maps (ahí también se puede calificar).
+export const GOOGLE = {
+  resenasGoogle: null,
+  fichaMaps: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Stylo Fitness Av. Universitaria 7455 Comas'),
+};
+export const linkResenaGoogle = () => GOOGLE.resenasGoogle ?? GOOGLE.fichaMaps;
+
+// Testimonios: solo reales, copiados de las reseñas de Google del gimnasio o con permiso del cliente.
+// Mientras la lista esté vacía, la sección muestra únicamente la invitación a calificar en Google.
+// Formato: { id: 't1', nombre: 'Nombre o inicial', detalle: 'Reseña de Google · mes año', estrellas: 5, texto: '...' }
+export const TESTIMONIOS = [];
+
 // Fotos del local (carpeta public/img). Son de prueba: se reemplazan por fotos reales con el mismo nombre.
+// Cada una necesita también su versión "-640.webp" (640 px de ancho) para celulares; ancho y alto son
+// los de la foto original, para que el navegador reserve el espacio y nada salte al cargar.
 export const FOTOS_SEDE = [
-  { src: 'img/sede-cardio.webp', titulo: 'Zona cardio', texto: 'Una fila completa de caminadoras con pantalla.' },
-  { src: 'img/sede-maquinas.webp', titulo: 'Máquinas y poleas', texto: 'Espacio amplio, espejos y luz natural.' },
-  { src: 'img/sede-fuerza.webp', titulo: 'Zona de fuerza', texto: 'Discos, barras y racks con piso de caucho.' },
+  { src: 'img/sede-cardio.webp', ancho: 940, alto: 1674, titulo: 'Zona cardio', texto: 'Una fila completa de caminadoras con pantalla.' },
+  { src: 'img/sede-maquinas.webp', ancho: 1672, alto: 941, titulo: 'Máquinas y poleas', texto: 'Espacio amplio, espejos y luz natural.' },
+  { src: 'img/sede-fuerza.webp', ancho: 1672, alto: 940, titulo: 'Zona de fuerza', texto: 'Discos, barras y racks con piso de caucho.' },
 ];
 
 export const CATEGORIAS = {

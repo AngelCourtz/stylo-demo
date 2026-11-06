@@ -21,16 +21,25 @@ const leerGuardado = () => {
 };
 
 // Pedido: { "820|Chocolate": 2, "1434": 1 }
+// El HTML prerenderizado sale con el pedido vacío; lo guardado se lee al activarse la página.
+// No se guarda nada hasta haber leído, para no borrar el pedido anterior con uno vacío.
 export function usePedido() {
-  const [lineas, setLineas] = useState(leerGuardado);
+  const [lineas, setLineas] = useState({});
+  const [leido, setLeido] = useState(false);
 
   useEffect(() => {
+    setLineas(leerGuardado());
+    setLeido(true);
+  }, []);
+
+  useEffect(() => {
+    if (!leido) return;
     try {
       localStorage.setItem(CLAVE_GUARDADO, JSON.stringify(lineas));
     } catch {
       // sin almacenamiento (modo privado): el pedido vive solo en esta pestaña
     }
-  }, [lineas]);
+  }, [lineas, leido]);
 
   const agregar = useCallback((clave, cantidad = 1) => {
     if (!CLAVE_VALIDA.test(clave) || !productoDe(clave)) return;

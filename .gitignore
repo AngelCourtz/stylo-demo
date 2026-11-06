@@ -1,6 +1,7 @@
 # Dependencias y compilados (se generan con npm install / npm run build)
 node_modules/
 dist/
+dist-ssr/
 
 # Claves y configuración privada: nunca subir a GitHub
 .env

@@ -1,12 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { Check, Info } from 'lucide-react';
 import Header from './components/Header.jsx';
 import Tienda from './components/Tienda.jsx';
-import ProductModal from './components/ProductModal.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import IconoWhatsApp from './components/IconoWhatsApp.jsx';
-import { ComoPedir, ElGym, Equipo, Pie, Portada, Promos, Sedes } from './components/Secciones.jsx';
+import { ComoPedir, ElGym, Equipo, Opiniones, Pie, Portada, Preguntas, Promos, Sedes } from './components/Secciones.jsx';
 import Intro from './components/Intro.jsx';
+
+// La ficha trae las descripciones de los 126 productos (unos 110 KB): se descarga recién
+// cuando alguien abre un producto, no al cargar la página.
+const ProductModal = lazy(() => import('./components/ProductModal.jsx'));
 import { useRevelar } from './lib/useRevelar.js';
 import { contarVisita, escucharClics } from './lib/contador.js';
 import { linkWhatsApp, nombreLinea } from './lib/tienda.js';
@@ -23,11 +26,13 @@ const idDelEnlace = () => {
 export default function App() {
   const pedido = usePedido();
   const [filtros, setFiltrosCompletos] = useState(FILTROS_INICIALES);
-  const [ficha, setFicha] = useState(idDelEnlace);
+  // Todo lo que depende del navegador (enlace, intro) arranca igual que el HTML prerenderizado
+  // y se ajusta al activarse la página.
+  const [ficha, setFicha] = useState(null);
   const [pedidoAbierto, setPedidoAbierto] = useState(false);
   const [aviso, setAviso] = useState('');
   const temporizador = useRef(null);
-  const [introLista, setIntroLista] = useState(false);
+  const [introLista, setIntroLista] = useState(true);
   const finIntro = useCallback(() => setIntroLista(true), []);
   useRevelar();
   useEffect(() => {
@@ -35,10 +40,17 @@ export default function App() {
     return escucharClics();
   }, []);
 
+  // La intro (columnas que suben y el logo que vuela) tapa la página 2.5 s: ya no sale en cada visita,
+  // solo con ?intro en la dirección, para mostrarla en la presentación al dueño.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has('intro')) setIntroLista(false);
+  }, []);
+
   const setFiltros = useCallback((cambios) => setFiltrosCompletos((f) => ({ ...f, ...cambios })), []);
 
   useEffect(() => {
     const alCambiar = () => setFicha(idDelEnlace());
+    alCambiar();
     window.addEventListener('hashchange', alCambiar);
     return () => window.removeEventListener('hashchange', alCambiar);
   }, []);
@@ -83,8 +95,10 @@ export default function App() {
           <ElGym />
           <Sedes />
           <Equipo />
+          <Opiniones />
           <Tienda filtros={filtros} setFiltros={setFiltros} onVer={verProducto} onAgregar={agregar} />
           <ComoPedir />
+          <Preguntas />
         </main>
         <Pie />
         <a className="flotante" href={linkWhatsApp('Hola, quiero hacer una consulta.')} target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp">
@@ -102,7 +116,11 @@ export default function App() {
         )}
       </div>
 
-      {ficha !== null && <ProductModal id={ficha} onCerrar={cerrarFicha} onVer={verProducto} onAgregar={agregar} />}
+      {ficha !== null && (
+        <Suspense fallback={null}>
+          <ProductModal id={ficha} onCerrar={cerrarFicha} onVer={verProducto} onAgregar={agregar} />
+        </Suspense>
+      )}
       <CartDrawer abierto={pedidoAbierto} onCerrar={cerrarPedido} pedido={pedido} />
       {!introLista && <Intro onFin={finIntro} />}
     </>

@@ -55,10 +55,16 @@ export const cuentaRegresiva = (hasta, ahora = Date.now()) => {
   return [d, h, m, s].map((n) => String(n).padStart(2, '0'));
 };
 
+// Hora en que se compiló la web (la fija vite.config.js).
+export const HORA_COMPILACION = typeof __HORA_COMPILACION__ === 'number' ? __HORA_COMPILACION__ : Date.now();
+
 // Reloj compartido: vuelve a dibujar cada `cada` milisegundos.
+// El primer dibujo usa la hora de compilación, igual que el HTML prerenderizado; apenas la página
+// se activa pasa a la hora real del visitante.
 export const useAhora = (cada = 1000) => {
-  const [ahora, setAhora] = useState(() => Date.now());
+  const [ahora, setAhora] = useState(HORA_COMPILACION);
   useEffect(() => {
+    setAhora(Date.now());
     const id = setInterval(() => setAhora(Date.now()), cada);
     return () => clearInterval(id);
   }, [cada]);

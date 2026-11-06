@@ -262,6 +262,71 @@ html.con-intro body { overflow: hidden; }
 .enlace-flecha:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 560px) { .entrenadores { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------- opiniones (claro, tarjetas con estrellas) ---------- */
+.opiniones { padding-block: var(--sec); background: var(--fondo); }
+.testimonios { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: clamp(16px, 2.4vw, 28px); }
+.testimonio { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 28px 26px; border: 1px solid var(--linea); border-radius: 20px; background: #fff; box-shadow: var(--sombra); }
+.comillas { position: absolute; top: 22px; right: 22px; color: var(--naranja-suave); }
+.estrellas { display: inline-flex; gap: 3px; color: var(--linea); }
+.estrellas .llena { color: var(--naranja); fill: var(--naranja); }
+.testimonio blockquote { flex: 1; font-size: 1.05rem; line-height: 1.55; }
+.testimonio figcaption { display: grid; gap: 2px; padding-top: 14px; border-top: 1px solid var(--linea); }
+.testimonio figcaption span { color: var(--gris); font-size: .88rem; }
+.opiniones-acc { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: clamp(28px, 4vw, 44px); }
+.opiniones-acc p { max-width: 40ch; color: var(--gris); font-size: .95rem; }
+/* sin testimonios: una sola franja con estrellas grandes y el botón, alineada con el título */
+.opiniones-acc.solo { margin-top: 0; padding: clamp(22px, 3vw, 32px) clamp(20px, 3vw, 36px); border-radius: 20px; background: #fff; border: 1px solid var(--linea); box-shadow: var(--sombra); }
+.opiniones-acc.solo .estrellas svg { width: 26px; height: 26px; }
+@media (max-width: 520px) { .opiniones-acc .boton { flex: 1 1 100%; white-space: normal; text-align: center; } }
+
+/* ---------- preguntas frecuentes (blanco, acordeón sin JavaScript) ---------- */
+.preguntas { padding-block: var(--sec); background: #fff; }
+.preguntas-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(24px, 5vw, 72px); align-items: start; }
+.preguntas .cabeza { margin-bottom: 0; }
+.acordeon { display: grid; }
+.acordeon details { border-bottom: 1px solid var(--linea); }
+.acordeon details:first-child { border-top: 1px solid var(--linea); }
+.acordeon summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 64px; padding: 14px 4px; font-weight: 700; font-size: 1.06rem; cursor: pointer; list-style: none; }
+.acordeon summary::-webkit-details-marker { display: none; }
+.acordeon summary svg { flex: none; color: var(--naranja-txt); transition: transform .2s; }
+.acordeon details[open] summary svg { transform: rotate(45deg); }
+.acordeon summary:hover { color: var(--naranja-txt); }
+.acordeon details p { padding: 0 4px 20px; max-width: 62ch; color: var(--acero); }
+.acordeon details a { color: var(--naranja-txt); font-weight: 600; }
+.acordeon .boton { justify-self: start; margin-top: 28px; }
+@media (max-width: 860px) { .preguntas-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- página del QR del local (qr/index.html) ---------- */
+.qr { position: relative; min-height: 100dvh; display: grid; place-items: start center; padding: 28px 16px 40px; overflow: hidden; background: radial-gradient(900px 500px at 80% 0%, #22252B 0%, var(--negro) 60%); color: #fff; }
+.qr-columnas { position: absolute; inset: 0; display: flex; justify-content: space-between; padding-inline: 4vw; pointer-events: none; opacity: .18; }
+.qr-columnas span { width: clamp(12px, 3vw, 40px); background: var(--columna); }
+.qr-caja { position: relative; width: min(460px, 100%); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.qr-logo { display: block; padding: 10px 18px; border-radius: 14px; background: #fff; line-height: 0; }
+.qr-logo img { height: 48px; width: auto; aspect-ratio: 4.9; object-fit: cover; object-position: 50% 49%; }
+.qr .estado { margin-top: 22px; }
+.qr h1 { margin-top: 18px; font: 900 clamp(2.3rem, 10vw, 3.1rem)/.92 var(--disp); text-transform: uppercase; text-wrap: balance; }
+.qr-bajada { margin-top: 10px; color: #A3A9B2; font-size: 1.05rem; }
+.qr-lista { width: 100%; display: grid; gap: 12px; margin-top: 24px; }
+.qr-boton { display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 12px 16px; border: 1.5px solid #2E3238; border-radius: 18px; background: var(--negro-2); text-align: left; text-decoration: none; transition: border-color .15s, background .15s, transform .15s; }
+.qr-boton:hover { border-color: #4A4F58; background: var(--grafito); }
+.qr-boton:active { transform: scale(.99); }
+.qr-icono { flex: none; width: 50px; height: 50px; display: grid; place-items: center; border-radius: 14px; background: var(--grafito); color: var(--naranja); }
+.qr-txt { flex: 1; display: grid; gap: 2px; }
+.qr-txt b { font-size: 1.08rem; }
+.qr-txt small { color: #A3A9B2; font-size: .88rem; }
+.qr-flecha { flex: none; color: #6B717B; }
+.qr-boton.principal { border-color: var(--naranja); background: var(--naranja); color: var(--negro); }
+.qr-boton.principal:hover { background: var(--naranja-hover); border-color: var(--naranja-hover); }
+.qr-boton.principal .qr-icono { background: rgba(18,19,22,.12); color: var(--negro); }
+.qr-boton.principal small, .qr-boton.principal .qr-flecha { color: rgba(18,19,22,.72); }
+.qr-boton.google { border-color: #F5C04A; }
+.qr-boton.google .qr-icono { background: #F5C04A; color: var(--negro); }
+.qr-boton.google .qr-icono svg { fill: currentColor; }
+.qr-boton.wa .qr-icono { background: var(--wa); color: #fff; }
+.qr-llegar { display: inline-flex; align-items: center; gap: 8px; margin-top: 28px; color: #C9CDD3; font-size: .92rem; text-decoration: underline; text-underline-offset: 3px; }
+.qr-llegar svg { flex: none; color: var(--naranja); }
+.qr-redes { display: flex; gap: 10px; margin-top: 18px; }
+
 /* ---------- objetivos (filtro de la tienda con discos) ---------- */
 .objetivos { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 22px; }
 .objetivos-tit { margin-right: 6px; font-weight: 700; color: var(--acero); }

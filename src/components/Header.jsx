@@ -6,6 +6,7 @@ const ENLACES = [
   ['#el-gym', 'El gym'],
   ['#sedes', 'Sedes y horario'],
   ['#equipo', 'Equipo'],
+  ['#opiniones', 'Opiniones'],
   ['#tienda', 'Suplementos'],
 ];
 
@@ -16,7 +17,7 @@ export default function Header({ cantidad, onPedido, introLista }) {
   return (
     <header className="cabecera">
       <a className={introLista ? 'marca' : 'marca esperando'} href="#inicio" onClick={cerrar} aria-label="Stylo Fitness, inicio">
-        <img src="img/logo-stylo.webp" alt="" width="1774" height="887" />
+        <img src="img/logo-stylo.webp" alt="" width="900" height="450" />
       </a>
       <button
         type="button"

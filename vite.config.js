@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { resolve } from 'node:path';
 
 // Política de seguridad de contenido (CSP): la página solo puede cargar recursos de estos orígenes.
 // Si agregas un servicio nuevo (otra fuente de fotos, analítica, etc.), añádelo aquí.
@@ -48,9 +49,25 @@ function seguridad() {
   };
 }
 
-export default defineConfig({
-  plugins: [react(), seguridad()],
+// Hora de compilación: el HTML prerenderizado y el primer dibujo en el navegador usan esta misma hora
+// (horario "abierto/cerrado", promos vigentes), así React no encuentra diferencias al activarse.
+// scripts/build.mjs la fija una sola vez para las dos pasadas de compilación.
+const HORA = Number(process.env.STYLO_HORA_COMPILACION) || Date.now();
+
+export default defineConfig(({ isSsrBuild }) => ({
+  plugins: [react(), ...(isSsrBuild ? [] : [seguridad()])],
+  define: { __HORA_COMPILACION__: JSON.stringify(HORA) },
   // Rutas relativas: la web funciona igual en GitHub Pages (usuario.github.io/repositorio/),
   // Netlify o abierta desde una subcarpeta.
   base: './',
-});
+  // Dos páginas: la web completa y la página del QR del local (…/qr/).
+  // La pasada de prerender (isSsrBuild) compila solo src/entry-server.jsx.
+  build: isSsrBuild ? {} : {
+    rollupOptions: {
+      input: {
+        web: resolve(import.meta.dirname, 'index.html'),
+        qr: resolve(import.meta.dirname, 'qr/index.html'),
+      },
+    },
+  },
+}));
