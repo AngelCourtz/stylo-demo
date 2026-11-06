@@ -64,13 +64,14 @@ export function Portada() {
         <div className="portada-foto">
           <span className="pilar" aria-hidden="true" />
           <figure>
+            {/* Recorte central de la foto de la zona de fuerza: columnas naranjas, discos y piso negro */}
             <img
-              src="img/sede-cardio.webp"
-              srcSet={srcsetFoto('img/sede-cardio.webp', 940)}
-              sizes="(max-width: 900px) 92vw, 40vw"
-              alt="Fila de caminadoras en Stylo Fitness con el logo en la pared del fondo"
-              width="940"
-              height="1674"
+              src="img/portada-fuerza.webp"
+              srcSet={srcsetFoto('img/portada-fuerza.webp', 1100)}
+              sizes="(max-width: 900px) 92vw, 44vw"
+              alt="Zona de fuerza con columnas naranjas, discos y máquina de poleas"
+              width="1100"
+              height="940"
               fetchPriority="high"
             />
           </figure>

@@ -145,22 +145,26 @@ html.con-intro body { overflow: hidden; }
 
 /* ---------- portada (oscura, foto entre dos columnas) ---------- */
 .portada { position: relative; overflow: hidden; padding-bottom: clamp(48px, 6vw, 88px); background: radial-gradient(1200px 600px at 85% 10%, #22252B 0%, var(--negro) 60%); color: #fff; }
-.portada-grid { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, .92fr); gap: clamp(36px, 6vw, 96px); align-items: center; padding-block: clamp(48px, 7vw, 104px) 0; }
-.portada h1 { margin-top: 26px; font: 900 clamp(3.4rem, 8.6vw, 7.4rem)/.84 var(--disp); text-transform: uppercase; letter-spacing: -.01em; }
+.portada-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 4.5vw, 72px); align-items: center; padding-block: clamp(36px, 5vw, 72px) 0; }
+.portada h1 { margin-top: 22px; font: 900 clamp(3.4rem, 7.4vw, 6.4rem)/.86 var(--disp); text-transform: uppercase; letter-spacing: -.01em; }
+/* "estilo de vida" en una sola línea en escritorio: sin "VIDA" suelta abajo */
+@media (min-width: 901px) { .portada h1 span { white-space: nowrap; } }
 .portada h1 span { display: block; color: var(--naranja); }
-.portada-donde { margin-top: 26px; max-width: 36ch; font-size: clamp(1.08rem, 1.5vw, 1.28rem); color: #B9BEC6; }
+.portada-donde { margin-top: 22px; max-width: 36ch; font-size: clamp(1.08rem, 1.5vw, 1.28rem); color: #B9BEC6; }
 .portada-donde b { color: #fff; }
-.portada-acc { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.portada-acc { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
 .boton.borde-osc { background: transparent; color: #fff; border-color: #4A4F58; }
 .boton.borde-osc:hover { border-color: #fff; background: rgba(255,255,255,.06); box-shadow: none; }
-.portada-foto { display: grid; grid-template-columns: clamp(16px, 2.4vw, 34px) minmax(0, 1fr) clamp(16px, 2.4vw, 34px); gap: clamp(10px, 1.4vw, 18px); height: clamp(440px, 64vh, 660px); }
+.portada-foto { display: grid; grid-template-columns: clamp(16px, 2.4vw, 34px) minmax(0, 1fr) clamp(16px, 2.4vw, 34px); gap: clamp(10px, 1.4vw, 18px); }
 .pilar { border-radius: 2px; background: var(--columna); transform-origin: bottom; animation: pilar-sube 1s cubic-bezier(.2,.8,.2,1) both; }
 .pilar:last-child { animation-delay: .12s; }
 @keyframes pilar-sube { from { transform: scaleY(0); } }
-.portada-foto figure { overflow: hidden; border-radius: 6px; background: var(--grafito); }
+.portada-foto figure { position: relative; aspect-ratio: 1100 / 940; overflow: hidden; border-radius: 6px; background: var(--grafito); }
+/* sombra interior suave: la foto se funde con la portada oscura en vez de verse pegada */
+.portada-foto figure::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -60px 80px -40px rgba(10,11,13,.55); pointer-events: none; }
 /* scale recorta los bordes de las fotos de prueba, donde suelen quedar defectos */
-.portada-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; transform: scale(1.07); }
-.consola { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(44px, 6vw, 80px); border-radius: 20px; background: var(--panel); box-shadow: inset 0 0 0 1px #2B2F36, 0 30px 60px rgba(0,0,0,.35); }
+.portada-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform: scale(1.03); }
+.consola { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(32px, 4vw, 52px); border-radius: 20px; background: var(--panel); box-shadow: inset 0 0 0 1px #2B2F36, 0 30px 60px rgba(0,0,0,.35); }
 .consola > div { display: flex; flex-direction: column; gap: 10px; padding: 22px clamp(18px, 2.4vw, 32px); }
 .consola > div + div { border-left: 1px solid #22252B; }
 .consola dt { font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #8C929B; }
@@ -169,7 +173,7 @@ html.con-intro body { overflow: hidden; }
 .consola-sol { font: 800 .6em/1 var(--disp); color: var(--led); }
 @media (max-width: 900px) {
   .portada-grid { grid-template-columns: minmax(0, 1fr); }
-  .portada-foto { height: clamp(320px, 70vw, 480px); }
+  .portada-foto figure { aspect-ratio: 4 / 3; }
   .consola { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .consola > div:nth-child(3) { border-left: 0; }
   .consola > div:nth-child(n+3) { border-top: 1px solid #22252B; }
