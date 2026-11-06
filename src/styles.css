@@ -579,3 +579,6 @@ html.con-intro body { overflow: hidden; }
 .horas i { font: 600 .78rem/1 var(--txt); color: #6F737B; margin: 0; }
 .horario li:not(.hoy) .horas { opacity: .82; }
 .paso-num { margin-bottom: 24px; font-size: 2.1rem; }
+
+/* parte del título en naranja (como "estilo de vida" en la portada) */
+.titulo .acento { color: var(--naranja); }

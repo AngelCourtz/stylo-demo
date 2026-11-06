@@ -156,7 +156,7 @@ export function ElGym() {
         <Cabeza
           id="gym-titulo"
           etiqueta="El gym"
-          titulo="Columnas naranjas, fierro de verdad"
+          titulo={<><span className="acento">Columnas naranjas,</span> fierro de verdad</>}
           bajada="Cardio, máquinas, poleas y peso libre. Si es tu primera vez, pregúntale al entrenador por dónde empezar."
         />
         <div className="galeria">
