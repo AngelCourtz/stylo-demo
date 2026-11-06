@@ -68,6 +68,18 @@ export const linkResenaGoogle = () => GOOGLE.resenasGoogle ?? GOOGLE.fichaMaps;
 // Formato: { id: 't1', nombre: 'Nombre o inicial', detalle: 'Reseña de Google · mes año', estrellas: 5, texto: '...' }
 export const TESTIMONIOS = [];
 
+// Conócenos (textos del gimnasio). Lo que está en null se muestra como "por confirmar" (en los números, "--").
+// desde: año en que abrió; los años se calculan solos. socios: socios activos aproximados (ej. 800).
+// foto: foto del dueño o del equipo en public/img (mientras sea null se muestra el símbolo del logo).
+export const NOSOTROS = {
+  desde: 2015,
+  socios: null,
+  proposito: 'En Stylo Fitness creemos que el bienestar va mucho más allá de la apariencia física. Nuestro propósito es impulsar una cultura fitness, ayudando a nuestros socios a desarrollar hábitos saludables y alcanzar sus objetivos mediante la actividad física.',
+  historia: 'Desde 2015 trabajamos para promover el deporte, la salud y el bienestar, creando un espacio donde cada persona pueda superarse, mantenerse activa y construir una mejor versión de sí misma.',
+  lema: 'Tu esfuerzo, tu evolución, tu nuevo estilo de vida.',
+  foto: null,
+};
+
 // Fotos del local (carpeta public/img). Son de prueba: se reemplazan por fotos reales con el mismo nombre.
 // Cada una necesita también su versión "-640.webp" (640 px de ancho) para celulares; ancho y alto son
 // los de la foto original, para que el navegador reserve el espacio y nada salte al cargar.

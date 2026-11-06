@@ -1,5 +1,5 @@
 import { ArrowUpRight, MapPin, Navigation, Plus, Quote, Star, Tag } from 'lucide-react';
-import { FOTOS_SEDE, HORARIO, NEGOCIO, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
+import { FOTOS_SEDE, HORARIO, NEGOCIO, NOSOTROS, OFERTA_MINIMA, REDES, SEDES, TESTIMONIOS, linkResenaGoogle } from '../data/negocio.js';
 import { PRODUCTOS, linkWhatsApp } from '../lib/tienda.js';
 import { cuentaRegresiva, estadoDelGimnasio, promosVigentes, useAhora } from '../lib/tiempo.js';
 import Display from './Display.jsx';
@@ -182,6 +182,57 @@ export function ElGym() {
   );
 }
 
+/* ---------- conócenos ---------- */
+// Solo datos reales de negocio.js; lo que falta (año, socios, historia, foto) se muestra como pendiente.
+export function Nosotros() {
+  const { desde, socios, proposito, historia, lema, foto } = NOSOTROS;
+  // con useAhora el HTML prerenderizado y el primer dibujo usan la misma fecha; luego pasa a la fecha real
+  const ahora = useAhora(3600000);
+  const anios = desde ? new Date(ahora).getFullYear() - desde : null;
+  const datos = [
+    { id: 'anios', valor: anios != null ? dos(anios) : '--', texto: anios != null ? `Años en Comas (desde ${desde})` : 'Años en Comas · por confirmar' },
+    { id: 'sedes', valor: dos(SEDES.length), texto: 'Sedes en la misma cuadra' },
+    { id: 'socios', valor: socios ?? '---', texto: socios ? 'Socios activos' : 'Socios activos · por confirmar' },
+    { id: 'productos', valor: TOTAL_PRODUCTOS, texto: 'Suplementos en tienda' },
+  ];
+  return (
+    <section className="nosotros" id="conocenos" aria-labelledby="nosotros-titulo">
+      <div className="envoltura nosotros-grid">
+        <div className="nosotros-txt revelar">
+          <p className="etiqueta">Conócenos{desde ? ` · Desde ${desde}` : ''}</p>
+          <h2 className="titulo" id="nosotros-titulo">
+            {anios ? <>Más de {anios} años impulsando <span className="acento">un estilo de vida saludable</span></> : <>Impulsando <span className="acento">un estilo de vida saludable</span></>}
+          </h2>
+          {proposito && <p className="bajada">{proposito}</p>}
+          {historia
+            ? <p className="nosotros-historia">{historia}</p>
+            : <p className="nosotros-historia pendiente-txt">Aquí va la historia de Stylo contada por el dueño: cómo empezó, desde cuándo y qué lo hace distinto. <b>Por confirmar.</b></p>}
+          {lema && <p className="nosotros-lema">{lema}</p>}
+          <a className="boton negro" data-evento="whatsapp-conocenos" href={linkWhatsApp('Hola, quiero conocer el gimnasio. ¿Puedo pasar a verlo?')} target="_blank" rel="noopener noreferrer">
+            <IconoWhatsApp size={19} /> Ven a conocernos
+          </a>
+        </div>
+
+        <div className="nosotros-panel revelar">
+          <figure className="nosotros-foto">
+            {foto
+              ? <img src={foto} alt="El equipo de Stylo Fitness" loading="lazy" decoding="async" />
+              : <img src="img/simbolo-stylo.webp" alt="" width="800" height="625" loading="lazy" decoding="async" className="simbolo" />}
+          </figure>
+          <dl className="nosotros-datos">
+            {datos.map((d) => (
+              <div key={d.id}>
+                <dd><Display valor={d.valor} etiqueta={String(d.valor) === '--' || String(d.valor) === '---' ? 'por confirmar' : String(d.valor)} /></dd>
+                <dt>{d.texto}</dt>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- sedes y horario ---------- */
 export function Sedes() {
   const ahora = useAhora(30000);
@@ -339,6 +390,7 @@ export function Preguntas() {
 }
 
 /* ---------- cómo pedir suplementos ---------- */
+// Va dentro de la tienda, entre las ofertas y el catálogo: primero se explica cómo comprar y luego se elige.
 export function ComoPedir() {
   const pasos = [
     ['Arma tu pedido', 'Agrega los suplementos que quieras. Si es proteína o pre entreno, escribe el sabor que prefieres.'],
@@ -346,9 +398,9 @@ export function ComoPedir() {
     ['Confirma y paga', 'Te confirmamos stock y entrega por WhatsApp. Pagas al confirmar: aquí no se cobra nada.'],
   ];
   return (
-    <section className="como" id="como-pedir" aria-labelledby="como-titulo">
-      <div className="envoltura">
-        <Cabeza id="como-titulo" etiqueta="Suplementos" titulo="Cómo pedir" />
+    <div className="como" id="como-pedir" aria-labelledby="como-titulo">
+      <div>
+        <Cabeza id="como-titulo" etiqueta="Tres pasos" titulo="Cómo pedir" />
         <ol className="pasos">
           {pasos.map(([t, d], i) => (
             <li key={t} className="revelar">
@@ -360,7 +412,7 @@ export function ComoPedir() {
         </ol>
         <p className="como-nota">Descuentos de {OFERTA_MINIMA}% o más marcados en cada producto. Precios tomados de stylofitness.com.</p>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -396,8 +448,9 @@ export function Pie() {
             <ul>
               <li><a href="#promos">Promos</a></li>
               <li><a href="#el-gym">El gym</a></li>
-              <li><a href="#sedes">Sedes y horario</a></li>
+              <li><a href="#conocenos">Conócenos</a></li>
               <li><a href="#opiniones">Opiniones</a></li>
+              <li><a href="#sedes">Sedes y horario</a></li>
               <li><a href="#tienda">Suplementos</a></li>
               <li><a href="#preguntas">Preguntas frecuentes</a></li>
             </ul>

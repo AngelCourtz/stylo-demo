@@ -593,3 +593,37 @@ html.con-intro body { overflow: hidden; }
 
 /* parte del título en naranja (como "estilo de vida" en la portada) */
 .titulo .acento { color: var(--naranja); }
+
+/* ---------- conócenos (blanco, entre El gym y opiniones) ---------- */
+.nosotros { padding-block: var(--sec); background: var(--papel); }
+.nosotros-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: clamp(36px, 6vw, 96px); align-items: center; }
+.nosotros-txt .boton { margin-top: 32px; }
+.nosotros-historia { margin-top: 22px; max-width: 52ch; font-size: 1.04rem; line-height: 1.7; color: var(--acero); }
+.nosotros-historia.pendiente-txt { padding: 16px 18px; border: 1px dashed var(--linea); border-radius: 14px; background: var(--hueso); color: var(--gris); font-size: .94rem; }
+.nosotros-historia.pendiente-txt b { color: var(--naranja-txt); }
+/* panel negro: el símbolo del logo (o la foto del equipo) y los números en dígitos de caminadora */
+.nosotros-panel { overflow: hidden; border-radius: var(--r-xl); background: var(--tinta); box-shadow: 0 30px 70px rgba(15,16,18,.22); }
+.nosotros-foto { aspect-ratio: 16 / 11; display: grid; place-items: center; overflow: hidden; background: var(--tinta); } /* mismo negro que el fondo de la imagen del símbolo */
+.nosotros-foto img { width: 100%; height: 100%; object-fit: cover; }
+.nosotros-foto img.simbolo { width: 78%; height: auto; object-fit: contain; }
+.nosotros-datos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--panel-borde); background: var(--panel); }
+.nosotros-datos > div { display: flex; flex-direction: column; gap: 8px; padding: 22px clamp(18px, 2.4vw, 30px); }
+.nosotros-datos > div:nth-child(even) { border-left: 1px solid var(--panel-borde); }
+.nosotros-datos > div:nth-child(n+3) { border-top: 1px solid var(--panel-borde); }
+.nosotros-datos dd { font-size: clamp(1.8rem, 3vw, 2.5rem); }
+.nosotros-datos dt { font-size: .74rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #8A8F98; }
+@media (max-width: 900px) { .nosotros-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 520px) { .nosotros-txt .boton { width: 100%; } .nosotros-datos dd { font-size: 1.6rem; } .nosotros-datos > div { padding: 18px 16px; } }
+
+/* ---------- cómo pedir dentro de la tienda (entre ofertas y catálogo) ---------- */
+.tienda .como { margin-bottom: clamp(64px, 8vw, 112px); padding: clamp(32px, 5vw, 64px); border-radius: var(--r-xl); background: var(--hueso); }
+.tienda .como .cabeza { margin-bottom: clamp(28px, 4vw, 48px); }
+.tienda .como .como-nota { margin-top: 32px; }
+@media (max-width: 520px) { .tienda .como { margin-inline: calc(var(--pad) * -.5); padding: 28px 20px; } }
+
+/* menú con seis secciones: un poco más juntas en pantallas medianas */
+@media (max-width: 1280px) and (min-width: 1061px) { .nav { gap: 22px; } .nav a { font-size: .9rem; } }
+/* lema de Conócenos: raya naranja a la izquierda, en la tipografía de los títulos */
+.nosotros-lema { margin-top: 26px; padding-left: 18px; border-left: 3px solid var(--naranja); font: 800 clamp(1.4rem, 2.2vw, 1.8rem)/1.05 var(--disp); text-transform: uppercase; color: var(--tinta); max-width: 26ch; }
+/* el título de Conócenos es largo: un poco más chico para que quede en 3 líneas */
+.nosotros .titulo { font-size: clamp(2.3rem, 4.2vw, 3.5rem); }

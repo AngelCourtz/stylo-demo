@@ -4,8 +4,9 @@ import { Menu, ShoppingBag, X } from 'lucide-react';
 const ENLACES = [
   ['#promos', 'Promos'],
   ['#el-gym', 'El gym'],
-  ['#sedes', 'Sedes y horario'],
+  ['#conocenos', 'Conócenos'],
   ['#opiniones', 'Opiniones'],
+  ['#sedes', 'Sedes y horario'],
   ['#tienda', 'Suplementos'],
 ];
 

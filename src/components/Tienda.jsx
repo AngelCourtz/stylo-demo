@@ -14,7 +14,7 @@ const ordenar = (lista, orden) => {
   return l;
 };
 
-export default function Tienda({ filtros, setFiltros, onVer, onAgregar }) {
+export default function Tienda({ filtros, setFiltros, onVer, onAgregar, entreOfertas = null }) {
   const { q, cat, objetivo, orden } = filtros;
   const [visibles, setVisibles] = useState(POR_PAGINA);
 
@@ -63,6 +63,8 @@ export default function Tienda({ filtros, setFiltros, onVer, onAgregar }) {
             {ofertas.map((p) => <ProductCard key={p.id} producto={p} onVer={onVer} onAgregar={onAgregar} />)}
           </div>
         </div>
+
+        {entreOfertas}
 
         <h2 className="titulo" id="tienda-titulo">Suplementos</h2>
         {/* Cada disco es un objetivo: más peso, objetivo más exigente */}
