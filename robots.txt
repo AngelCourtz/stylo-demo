@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://angelcourtz.github.io/stylo-demo/sitemap.xml
